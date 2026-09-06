@@ -12,8 +12,7 @@ export default function SidebarPage() {
         { name: "Project", href: "/dashboard/projects", icon: <Briefcase className="w-5 h-5" /> },
         { name: "Worklogs", href: "/dashboard/worklogs", icon: <Clock className="w-5 h-5" /> },
         { name: "Invoices", href: "/dashboard/invoices", icon: <Receipt className="w-5 h-5" /> },
-        { name: "General", href: "/dashboard/general", icon: <Settings className="w-5 h-5" /> },
-        { name: "Billing Rules", href: "/dashboard/billing", icon: <Settings2 className="w-5 h-5 " /> }
+
     ]
     const menuItems2 = [
         { name: "General", href: "/dashboard/general", icon: <Settings className="w-5 h-5" /> },
@@ -33,7 +32,7 @@ export default function SidebarPage() {
             </div>
 
             {/* Main Navigation */}
-            <div className="flex-1">
+            <div className="mb-6">
                 <h2 className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
                     Menu Utama
                 </h2>
@@ -59,25 +58,25 @@ export default function SidebarPage() {
                 </nav>
             </div>
 
-            <div className="flex-1">
-                <h2 className="px-4 text-xs font-bold text-slate-400 uppercase tracking-widermb-3">
+            <div className="mb-6">
+                <h2 className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
                     Settings & Governance
                 </h2>
-                {menuItems2.map((item) => {
-                    const isActive = pathname === item.href;
+                {menuItems2.map((items) => {
+                    const isActive = pathname === items.href;
                     return (
                         <Link
-                            key={item.name}
-                            href={item.href}
+                            key={items.name}
+                            href={items.href}
                             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
                                 ? "bg-[#E15A3E] text-white shadow-md shadow-[#E15A3E]/20"
                                 : "text-slate-500 hover:bg-[#FFF0ED] hover:text-[#E15A3E]"
                                 }`}
                         >
                             <span className={isActive ? "text-white" : "text-slate-400"}>
-                                {item.icon}
+                                {items.icon}
                             </span>
-                            <span>{item.name}</span>
+                            <span>{items.name}</span>
                         </Link>
                     )
                 })}
@@ -85,7 +84,7 @@ export default function SidebarPage() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-slate-100 pt-5 mt-5 space-y-1">
+            <div className="border-t border-slate-100 pt-5 mt-auto space-y-1">
                 <Link
                     href="/dashboard/settings"
                     className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-[#FFF0ED] hover:text-[#E15A3E] transition-all duration-200"

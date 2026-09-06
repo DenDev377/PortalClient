@@ -6,7 +6,7 @@ export default function DashboardPage() {
 
 
             {/* Main Content */}
-            <main className="flex-1 p-8 max-w-7xl w-full mx-auto">
+            <main className="flex-1 p-8 w-full mx-auto">
                 <div className="mb-8">
                     <h2 className="text-2xl font-bold text-gray-800">Selamat datang kembali!</h2>
                     <p className="text-gray-500 mt-1">Berikut adalah ringkasan aktivitas Anda hari ini.</p>
