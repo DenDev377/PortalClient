@@ -31,6 +31,7 @@ export default function SidebarPage() {
                 </h1>
             </div>
 
+
             {/* Main Navigation */}
             <div className="mb-6">
                 <h2 className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
