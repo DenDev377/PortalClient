@@ -36,13 +36,13 @@ export default function NavbarPage() {
                     </div>
 
                     {/* Profile Section */}
-                    <div className="relative flex items-center gap-3 pl-5 border-l border-slate-200">
-                        <button 
+                    <div className="relative flex items-center gap-3 pl-5 border-l border-slate-200/70">
+                        <button
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
                             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                         >
                             <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 overflow-hidden">
-                                {/* Use an img tag here if you have an avatar URL */}
+
                                 <User className="w-5 h-5" />
                             </div>
                             <div className="hidden sm:flex flex-col items-start min-w-[100px]">
