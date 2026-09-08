@@ -6,14 +6,25 @@ import { useState } from "react";
 
 export default function NavbarPage() {
     const pathname = usePathname();
+    const router = useRouter();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+    const configPage: Record<string, { title: string; subtitle: string; }> = {
+        "/dashboard": { title: "Dashboard", subtitle: "Selamat datang kembali! Ini ringkasan hari ini." },
+        "/dashboard/client": { title: "Clients", subtitle: "Selamat datang pada halaman client" },
+        "/dashboard/project": { title: "Project", subtitle: "Selamat datang pada halaman project" },
+        "/dahsboard/worklogs": { title: "worklogs", subtitle: "Selamat datang pada halaman worklogs" },
+        "/dashboard/invoices": { title: "invoices", subtitle: "Selamat datang pada halaman invoices" }
+    }
+
+    const currentConfig = configPage[pathname] || configPage["/dashboard"]
 
     return (
         <nav className="bg-white w-full border-b border-slate-200 shrink-0">
             <div className="max-w-full px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
                 <div className="flex flex-col min-w-0 flex-1">
-                    <h1 className="text-xl font-bold text-slate-800 leading-tight truncate">Dashboard</h1>
-                    <p className="text-xs text-slate-500 mt-0.5 hidden sm:block">Selamat datang kembali! Ini ringkasan hari ini.</p>
+                    <h1 className="text-xl font-bold text-slate-800 leading-tight truncate">{currentConfig.title}</h1>
+                    <p className="text-xs text-slate-500 mt-0.5 hidden sm:block">{currentConfig.subtitle}</p>
                 </div>
 
                 <div className="flex items-center justify-end gap-5">
@@ -45,7 +56,7 @@ export default function NavbarPage() {
 
                                 <User className="w-5 h-5" />
                             </div>
-                            <div className="hidden sm:flex flex-col items-start min-w-[100px]">
+                            <div className="hidden sm:flex flex-col items-start min-w-25">
                                 <span className="text-sm font-semibold text-slate-800 leading-none mb-1">Admin User</span>
                                 <span className="text-xs text-slate-500 leading-none">admin@portal.com</span>
                             </div>
