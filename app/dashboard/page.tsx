@@ -9,10 +9,12 @@ import {
 } from "lucide-react";
 import FinancialOverview from "@/components/dashboard/FInancialOverview";
 import TableOverview from "@/components/dashboard/TableOverview";
+import QuickActionWidget from "@/components/dashboard/QuickActionWidget";
+import DueInvoicesWidget from "@/components/dashboard/DueInvoicesWidget";
 export default function DashboardPage() {
   return (
     <div className="flex flex-col max-w-full w-full mx-auto p-8">
-      <div className="mb-8">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold text-slate-900">
           Dashboard Overview
         </h1>
@@ -20,7 +22,6 @@ export default function DashboardPage() {
           Welcome back, here's what's happening with your clients today.
         </p>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Card 1: Total Revenue */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
@@ -132,16 +133,15 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <FinancialOverview />
+        <TableOverview />
+      </div>
 
-      {/*chart section */}
-
-      <div className="mt-4 flex lg:flex-col flex-row items-start gap-6">
-        <div className="w-full lg:w-1/2">
-          <FinancialOverview />
-        </div>
-        <div className="w-full lg:w-1/2">
-          <TableOverview />
-        </div>
+      {/* widget */}
+      <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <QuickActionWidget />
+        <DueInvoicesWidget />
       </div>
     </div>
   );

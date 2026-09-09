@@ -53,13 +53,13 @@ export default function TableOverview() {
   };
 
   return (
-    <div className="max-w-full mx-auto w-full mt-4">
-      <div className="mt-4 grid grid-cols-3 lg:grid-cols-1 gap-6">
-        <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
+    <div className="max-w-full mx-auto w-full bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <div className=" grid grid-cols-3 lg:grid-cols-1 gap-6">
+        <div className="px-6 py-2 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-800">Total Revenue</h2>
           <a
             href="#"
-            className="text-blue-600 bg-blue-50 px-4 py-2 rounded-md hover:text-blue-800"
+            className="text-slate-50 bg-blue-500 px-4 py-2 rounded-md hover:text-slate-200 hover:bg-blue-600 transition-all duration-200 text-sm"
           >
             Lihat Semua
           </a>
