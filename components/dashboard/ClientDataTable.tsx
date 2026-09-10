@@ -27,33 +27,6 @@ export interface ClientData {
   portalStatus: "TERVERIFIKASI" | "UNDANGAN_DITERIMA";
 }
 
-const sampleClients: ClientData[] = [
-  {
-    id: "1",
-    companyName: "PT Maju Jaya",
-    email: "maju@mj.com",
-    picName: "Budi",
-    phone: "08123456789",
-    activeProjectsCount: 5,
-    unbilledHours: 100,
-    unbilledAmount: "Rp 2.500.000",
-    billingStatus: "LUNAS",
-    portalStatus: "TERVERIFIKASI",
-  },
-  {
-    id: "2",
-    companyName: "CV Kreatif Abadi",
-    email: "kreatif@ka.com",
-    picName: "Andi",
-    phone: "08123456789",
-    activeProjectsCount: 3,
-    unbilledHours: 50,
-    unbilledAmount: "Rp 1.500.000",
-    billingStatus: "PENDING",
-    portalStatus: "UNDANGAN_DITERIMA",
-  },
-];
-
 interface ClientDataTableProps {
   clients: ClientData[];
   onViewWorkspace: (clientId: string) => void;
@@ -111,7 +84,7 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
 
           {/* Body Tabel */}
           <tbody className="divide-y divide-slate-100">
-            {sampleClients.map((client) => (
+            {clients.map((client) => (
               <tr
                 key={client.id}
                 className="transition-colors hover:bg-slate-50"
@@ -225,8 +198,7 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
                           }}
                           className="flex w-full items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
                         >
-                          <Edit className="h-4 w-4 text-slate-500" /> Edit
-                          Data
+                          <Edit className="h-4 w-4 text-slate-500" /> Edit Data
                         </button>
                         <button
                           onClick={() => {
@@ -235,8 +207,8 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
                           }}
                           className="flex w-full items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
                         >
-                          <Send className="h-4 w-4 text-green-500" />{" "}
-                          Kirim Link Portal
+                          <Send className="h-4 w-4 text-green-500" /> Kirim Link
+                          Portal
                         </button>
                         <div className="my-1 border-t border-slate-100"></div>
                         <button

@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { ClientDataTable } from "@/components/dashboard/ClientDataTable";
+import { ClientDataTable, ClientData } from "@/components/dashboard/ClientDataTable";
 import {
   CircleDollarSign,
   Users,
@@ -8,7 +10,68 @@ import {
   Clock,
   Settings2,
 } from "lucide-react";
+
 const clientPage = () => {
+  // Sample data - nanti akan diganti dengan data dari database
+  const sampleClients: ClientData[] = [
+    {
+      id: "1",
+      companyName: "PT Maju Jaya",
+      email: "maju@mj.com",
+      picName: "Budi",
+      phone: "08123456789",
+      activeProjectsCount: 5,
+      unbilledHours: 100,
+      unbilledAmount: "Rp 2.500.000",
+      billingStatus: "LUNAS",
+      portalStatus: "TERVERIFIKASI",
+    },
+    {
+      id: "2",
+      companyName: "CV Kreatif Abadi",
+      email: "kreatif@ka.com",
+      picName: "Andi",
+      phone: "08123456789",
+      activeProjectsCount: 3,
+      unbilledHours: 50,
+      unbilledAmount: "Rp 1.500.000",
+      billingStatus: "PENDING",
+      portalStatus: "UNDANGAN_DITERIMA",
+    },
+    {
+      id: "3",
+      companyName: "PT Teknologi Nusantara",
+      email: "tech@tn.com",
+      picName: "Siti",
+      phone: "08129876543",
+      activeProjectsCount: 7,
+      unbilledHours: 150,
+      unbilledAmount: "Rp 3.750.000",
+      billingStatus: "OVERDUE",
+      portalStatus: "TERVERIFIKASI",
+    },
+  ];
+
+  // Handler functions - nanti akan terhubung dengan modal/actions
+  const handleViewWorkspace = (clientId: string) => {
+    console.log("View workspace for client:", clientId);
+    // TODO: Navigate ke halaman workspace detail atau buka modal
+  };
+
+  const handleEditClient = (clientId: string) => {
+    console.log("Edit client:", clientId);
+    // TODO: Buka modal edit client
+  };
+
+  const handleSendPortalLink = (clientId: string) => {
+    console.log("Send portal link to client:", clientId);
+    // TODO: Trigger email send atau buka modal konfirmasi
+  };
+
+  const handleDeleteClient = (clientId: string) => {
+    console.log("Delete client:", clientId);
+    // TODO: Buka modal konfirmasi delete
+  };
   return (
     <div className="flex flex-col max-w-full w-full mx-auto p-6">
       <div className="mb-4">
@@ -146,7 +209,13 @@ const clientPage = () => {
 
         {/* Table */}
         <div className="mt-4 overflow-x-auto">
-          <ClientDataTable />
+          <ClientDataTable
+            clients={sampleClients}
+            onViewWorkspace={handleViewWorkspace}
+            onEditClient={handleEditClient}
+            onSendPortalLink={handleSendPortalLink}
+            onDeleteClient={handleDeleteClient}
+          />
         </div>
       </div>
     </div>
