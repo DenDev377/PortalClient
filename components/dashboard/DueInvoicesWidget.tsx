@@ -69,7 +69,7 @@ export default function DueInvoicesWidget() {
         </span>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto max-h-[320px] pr-1">
+      <div className="flex-1 space-y-3 overflow-y-auto max-h-80 pr-1">
         {mockInvoices.map((inv) => {
           const daysLeft = getDaysUntil(inv.dueDate);
           let urgency = "normal";
@@ -119,7 +119,7 @@ export default function DueInvoicesWidget() {
               {/* Kanan: Tombol Reminder */}
               <button
                 onClick={() => handleSendReminder(inv.invoiceNo)}
-                className={`flex-shrink-0 flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md transition-all ${
+                className={`shrink-0 flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md transition-all ${
                   daysLeft <= 0
                     ? "bg-rose-600 text-white hover:bg-rose-700"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
