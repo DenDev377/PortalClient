@@ -13,7 +13,7 @@ import QuickActionWidget from "@/components/dashboard/QuickActionWidget";
 import DueInvoicesWidget from "@/components/dashboard/DueInvoicesWidget";
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col max-w-full w-full mx-auto p-8">
+    <div className="flex flex-col max-w-full w-full mx-auto p-6">
       <div className="mb-4">
         <h1 className="text-2xl font-bold text-slate-900">
           Dashboard Overview
