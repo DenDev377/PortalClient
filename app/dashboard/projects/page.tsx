@@ -1,9 +1,71 @@
 "use client";
-import { Activity, FolderKanban, Briefcase, Clock } from "lucide-react";
+import {
+  Activity,
+  FolderKanban,
+  Briefcase,
+  Clock,
+  Settings2,
+} from "lucide-react";
 
-import TableProjects from "@/components/dashboard/TableProjects";
+import TableProjects, {
+  ProjectData,
+} from "@/components/dashboard/TableProjects";
 
 export default function ProjectsPage() {
+  const sampleProjects: ProjectData[] = [
+    {
+      id: "1",
+      projectName: "Website Redesign",
+      clientName: "PT Maju Jaya",
+      billingModel: "HOURLY",
+      hoursLogged: 120,
+      hoursBudget: 200,
+      spentAmount: "Rp 3.000.000",
+      budgetAmount: "Rp 5.000.000",
+      status: "ACTIVE",
+      deadline: "2024-07-15",
+    },
+    {
+      id: "2",
+      projectName: "Mobile App Development",
+      clientName: "CV Kreatif Abadi",
+      billingModel: "FIXED",
+      hoursLogged: 80,
+      hoursBudget: 100,
+      spentAmount: "Rp 2.500.000",
+      budgetAmount: "Rp 3.000.000",
+      status: "ON_HOLD",
+      deadline: "2024-08-01",
+    },
+    {
+      id: "3",
+      projectName: "E-commerce Platform",
+      clientName: "PT Teknologi Nusantara",
+      billingModel: "MILESTONE",
+      hoursLogged: 150,
+      hoursBudget: 200,
+      spentAmount: "Rp 4.500.000",
+      budgetAmount: "Rp 6.000.000",
+      status: "COMPLETED",
+      deadline: "2024-06-30",
+    },
+  ];
+  const handleViewProject = (projectId: string) => {
+    console.log("View project:", projectId);
+  };
+
+  const handleEditProject = (projectId: string) => {
+    console.log("Edit project:", projectId);
+  };
+
+  const handleArchiveProject = (projectId: string) => {
+    console.log("Archive project:", projectId);
+  };
+
+  const handleDeleteProject = (projectId: string) => {
+    console.log("Delete project:", projectId);
+  };
+
   return (
     <div className="max-w-full w-full mx-auto flex flex-col p-6">
       <div className="mb-4">
@@ -105,7 +167,63 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm "></div>
+      <div className="bg-white rounded-xl shadow-sm p-6 mt-6 flex flex-col">
+        <div className="flex justify-between items-center px-8">
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              placeholder="Search projects..."
+              className="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent"
+            />
+            <div className="relative flex items-center">
+              <Settings2 className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none z-10" />
+
+              <select className="appearance-none bg-white border border-slate-300 rounded-lg pl-9 pr-8 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all cursor-pointer">
+                <option value="">All Type</option>
+                <option value="active">Hourly Rate</option>
+                <option value="inactive">Fixed Price</option>
+              </select>
+
+              <div className="absolute right-3 pointer-events-none text-slate-400">
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="relative flex items-center">
+              <Settings2 className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none z-10" />
+              <select className="appearance-none bg-white border border-slate-300 rounded-lg pl-9 pr-8 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all cursor-pointer">
+                <option value="">All Status</option>
+                <option value="">In Progress</option>
+                <option value="">Completed</option>
+                <option value="">On Hold</option>
+              </select>
+              <div className="absolute right-3 pointer-events-none text-slate-400">
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
+            <button className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg">
+              Add Project
+            </button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="mt-4 overflow-x-auto">
+          <TableProjects
+            projects={sampleProjects}
+            onViewProject={handleViewProject}
+            onEditProject={handleEditProject}
+            onArchiveProject={handleArchiveProject}
+            onDeleteProject={handleDeleteProject}
+          />
+        </div>
+      </div>
     </div>
   );
 }

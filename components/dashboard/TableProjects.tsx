@@ -146,8 +146,8 @@ export default function TableProjects({
                   ? Math.min(
                       100,
                       Math.round(
-                        (project.hoursLogged / project.hoursBudget) * 100
-                      )
+                        (project.hoursLogged / project.hoursBudget) * 100,
+                      ),
                     )
                   : 0;
 
