@@ -1,7 +1,10 @@
 "use client";
-
+import { useState } from "react";
 import React from "react";
-import { ClientDataTable, ClientData } from "@/components/dashboard/ClientDataTable";
+import {
+  ClientDataTable,
+  ClientData,
+} from "@/components/dashboard/ClientDataTable";
 import {
   CircleDollarSign,
   Users,
@@ -11,8 +14,11 @@ import {
   Settings2,
 } from "lucide-react";
 
+import AddModalClient from "@/components/dashboard/AddModalClient";
+
 const clientPage = () => {
-  // Sample data - nanti akan diganti dengan data dari database
+  const [modalOpen, setModalOpen] = useState(false);
+
   const sampleClients: ClientData[] = [
     {
       id: "1",
@@ -201,7 +207,10 @@ const clientPage = () => {
             </div>
 
             {/* Button Add Client */}
-            <button className="bg-[#E15A3E] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#C14A2F] transition-all duration-200 shadow-sm">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="bg-[#E15A3E] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#C14A2F] transition-all duration-200 shadow-sm"
+            >
               Add Client
             </button>
           </div>
@@ -218,6 +227,7 @@ const clientPage = () => {
           />
         </div>
       </div>
+      <AddModalClient isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 };
