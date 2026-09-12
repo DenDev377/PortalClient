@@ -7,11 +7,14 @@ import {
   Settings2,
 } from "lucide-react";
 
-import TableProjects, {
-  ProjectData,
-} from "@/components/dashboard/TableProjects";
+import TableProjects from "@/components/dashboard/TableProjects";
+import AddModalProject from "@/components/dashboard/AddModalProject";
+import { useState } from "react";
+import type { ProjectData } from "@/types/project";
 
 export default function ProjectsPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const sampleProjects: ProjectData[] = [
     {
       id: "1",
@@ -207,7 +210,10 @@ export default function ProjectsPage() {
                 </svg>
               </div>
             </div>
-            <button className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg"
+            >
               Add Project
             </button>
           </div>
@@ -224,6 +230,7 @@ export default function ProjectsPage() {
           />
         </div>
       </div>
+      <AddModalProject isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

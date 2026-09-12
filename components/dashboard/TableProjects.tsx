@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   MoreVertical,
   ExternalLink,
@@ -14,19 +14,7 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
-
-export interface ProjectData {
-  id: string;
-  projectName: string;
-  clientName: string;
-  billingModel: "HOURLY" | "FIXED" | "MILESTONE";
-  hoursLogged: number;
-  hoursBudget: number;
-  spentAmount: string;
-  budgetAmount: string;
-  status: "ACTIVE" | "ON_HOLD" | "COMPLETED" | "CANCELLED";
-  deadline: string;
-}
+import type { BillingModel, ProjectData, ProjectStatus } from "@/types/project";
 
 interface TableProjectsProps {
   projects: ProjectData[];
@@ -51,7 +39,7 @@ export default function TableProjects({
 
   const getAvatarInitial = (name: string) => name.charAt(0).toUpperCase();
 
-  const getBillingModelBadge = (model: ProjectData["billingModel"]) => {
+  const getBillingModelBadge = (model: BillingModel) => {
     switch (model) {
       case "HOURLY":
         return (
@@ -74,7 +62,7 @@ export default function TableProjects({
     }
   };
 
-  const getStatusBadge = (status: ProjectData["status"]) => {
+  const getStatusBadge = (status: ProjectStatus) => {
     switch (status) {
       case "ACTIVE":
         return (
