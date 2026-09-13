@@ -1,5 +1,5 @@
-import SidebarPage from "@/components/layout/Sidebar";
-import NavbarPage from "@/components/layout/Navbar";
+import SidebarPage from "@/components/admin/Sidebar";
+import NavbarPage from "@/components/admin/Navbar";
 
 export default function DashboardLayout({
     children,

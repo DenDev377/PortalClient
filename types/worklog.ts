@@ -2,6 +2,7 @@ export type BillingStatus = "UNBILLED" | "BILLED";
 
 export interface WorklogData {
   id: string;
+  projectId: string;
   projectName: string;
   clientName: string;
   taskDescription: string;

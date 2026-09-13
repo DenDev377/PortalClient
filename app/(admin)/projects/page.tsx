@@ -7,8 +7,8 @@ import {
   Settings2,
 } from "lucide-react";
 
-import TableProjects from "@/components/dashboard/TableProjects";
-import AddModalProject from "@/components/dashboard/AddModalProject";
+import TableProjects from "@/components/admin/TableProjects";
+import AddModalProject from "@/components/admin/AddModalProject";
 import { useState } from "react";
 import type { ProjectData } from "@/types/project";
 

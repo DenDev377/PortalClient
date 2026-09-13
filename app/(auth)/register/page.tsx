@@ -33,7 +33,7 @@ export default function RegisterPage() {
             />
           </div>
           
-          <Link href="/dashboard" className="w-full bg-blue-600 text-white text-center rounded-md py-2.5 mt-4 hover:bg-blue-700 transition-colors font-medium">
+          <Link href="/overview" className="w-full bg-blue-600 text-white text-center rounded-md py-2.5 mt-4 hover:bg-blue-700 transition-colors font-medium">
             Daftar Akun
           </Link>
         </form>

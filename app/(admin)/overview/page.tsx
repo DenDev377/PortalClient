@@ -7,10 +7,10 @@ import {
   Users,
   Briefcase,
 } from "lucide-react";
-import FinancialOverview from "@/components/dashboard/FInancialOverview";
-import TableOverview from "@/components/dashboard/TableOverview";
-import QuickActionWidget from "@/components/dashboard/QuickActionWidget";
-import DueInvoicesWidget from "@/components/dashboard/DueInvoicesWidget";
+import FinancialOverview from "@/components/admin/FInancialOverview";
+import TableOverview from "@/components/admin/TableOverview";
+import QuickActionWidget from "@/components/admin/QuickActionWidget";
+import DueInvoicesWidget from "@/components/admin/DueInvoicesWidget";
 export default function DashboardPage() {
   return (
     <div className="flex flex-col max-w-full w-full mx-auto p-6">

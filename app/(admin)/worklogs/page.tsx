@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { Clock, Coins, FileCheck, Timer, FileText } from "lucide-react";
-import QuickTimeLogBar from "@/components/dashboard/QuickTimeLogBar";
-import WorklogToolbar from "@/components/dashboard/WorklogToolbar";
-import TableWorklogs from "@/components/dashboard/TableWorklogs";
+import QuickTimeLogBar from "@/components/admin/QuickTimeLogBar";
+import WorklogToolbar from "@/components/admin/WorklogToolbar";
+import TableWorklogs from "@/components/admin/TableWorklogs";
+import EditWorklogModal from "@/components/admin/EditWorklogModal";
 import type { DateRangePreset, WorklogData } from "@/types/worklog";
 
 const DUMMY_WORKLOGS: WorklogData[] = [
   {
     id: "wl-001",
+    projectId: "1",
     projectName: "Website Redesign",
     clientName: "PT Maju Jaya",
     taskDescription: "Fixing Bug Auth & Slices UI untuk halaman dashboard",
@@ -21,6 +23,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
   },
   {
     id: "wl-002",
+    projectId: "2",
     projectName: "Mobile App Development",
     clientName: "CV Kreatif Abadi",
     taskDescription: "Implementasi endpoint API untuk modul notifikasi",
@@ -33,6 +36,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
   },
   {
     id: "wl-003",
+    projectId: "3",
     projectName: "E-commerce Platform",
     clientName: "PT Teknologi Nusantara",
     taskDescription:
@@ -45,6 +49,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
   },
   {
     id: "wl-004",
+    projectId: "1",
     projectName: "Website Redesign",
     clientName: "PT Maju Jaya",
     taskDescription: " slicing ulang komponen Navbar dan Sidebar responsif",
@@ -56,6 +61,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
   },
   {
     id: "wl-005",
+    projectId: "4",
     projectName: "Internal Dashboard",
     clientName: "Toko Modern Sentosa",
     taskDescription:
@@ -69,6 +75,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
   },
   {
     id: "wl-006",
+    projectId: "3",
     projectName: "E-commerce Platform",
     clientName: "PT Teknologi Nusantara",
     taskDescription:
@@ -89,6 +96,7 @@ export default function WorklogsPage() {
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [editingWorklog, setEditingWorklog] = useState<WorklogData | null>(null);
 
   const handleToggleSelect = (worklogId: string) => {
     setSelectedIds((prev) =>
@@ -103,7 +111,10 @@ export default function WorklogsPage() {
   };
 
   const handleEditLog = (worklogId: string) => {
-    console.log("Edit worklog:", worklogId);
+    const worklog = DUMMY_WORKLOGS.find((w) => w.id === worklogId);
+    if (worklog) {
+      setEditingWorklog(worklog);
+    }
   };
 
   const handleDeleteLog = (worklogId: string) => {
@@ -289,6 +300,13 @@ export default function WorklogsPage() {
           onDeleteLog={handleDeleteLog}
         />
       </div>
+
+      <EditWorklogModal
+        isOpen={editingWorklog !== null}
+        onClose={() => setEditingWorklog(null)}
+        worklog={editingWorklog}
+        isAdmin={true}
+      />
     </div>
   );
 }

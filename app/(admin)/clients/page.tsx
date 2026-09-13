@@ -4,7 +4,7 @@ import React from "react";
 import {
   ClientDataTable,
   ClientData,
-} from "@/components/dashboard/ClientDataTable";
+} from "@/components/admin/ClientDataTable";
 import {
   CircleDollarSign,
   Users,
@@ -14,7 +14,7 @@ import {
   Settings2,
 } from "lucide-react";
 
-import AddModalClient from "@/components/dashboard/AddModalClient";
+import AddModalClient from "@/components/admin/AddModalClient";
 
 const clientPage = () => {
   const [modalOpen, setModalOpen] = useState(false);

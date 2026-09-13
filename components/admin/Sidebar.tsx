@@ -7,16 +7,16 @@ export default function SidebarPage() {
     const pathname = usePathname()
 
     const menuItems = [
-        { name: "Overview", href: "/dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
-        { name: "Clients", href: "/dashboard/client", icon: <Users className="w-5 h-5" /> },
-        { name: "Project", href: "/dashboard/projects", icon: <Briefcase className="w-5 h-5" /> },
-        { name: "Worklogs", href: "/dashboard/worklogs", icon: <Clock className="w-5 h-5" /> },
-        { name: "Invoices", href: "/dashboard/invoices", icon: <Receipt className="w-5 h-5" /> },
+        { name: "Overview", href: "/overview", icon: <LayoutDashboard className="w-5 h-5" /> },
+        { name: "Clients", href: "/clients", icon: <Users className="w-5 h-5" /> },
+        { name: "Project", href: "/projects", icon: <Briefcase className="w-5 h-5" /> },
+        { name: "Worklogs", href: "/worklogs", icon: <Clock className="w-5 h-5" /> },
+        { name: "Invoices", href: "/invoices", icon: <Receipt className="w-5 h-5" /> },
 
     ]
     const menuItems2 = [
-        { name: "General", href: "/dashboard/general", icon: <Settings className="w-5 h-5" /> },
-        { name: "Billing Rules", href: "/dashboard/billing", icon: <Settings2 className="w-5 h-5 " /> }
+        { name: "General", href: "/general", icon: <Settings className="w-5 h-5" /> },
+        { name: "Billing Rules", href: "/billing", icon: <Settings2 className="w-5 h-5 " /> }
     ]
 
     return (
@@ -87,7 +87,7 @@ export default function SidebarPage() {
             {/* Bottom Actions */}
             <div className="border-t border-slate-100 pt-5 mt-auto space-y-1">
                 <Link
-                    href="/dashboard/settings"
+                    href="/settings"
                     className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-[#FFF0ED] hover:text-[#E15A3E] transition-all duration-200"
                 >
                     <FileText className="w-5 h-5 text-slate-400" />
