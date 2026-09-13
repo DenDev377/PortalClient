@@ -1,10 +1,85 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, Coins, FileCheck, Timer } from "lucide-react";
+import { Clock, Coins, FileCheck, Timer, FileText } from "lucide-react";
 import QuickTimeLogBar from "@/components/dashboard/QuickTimeLogBar";
 import WorklogToolbar from "@/components/dashboard/WorklogToolbar";
-import type { DateRangePreset } from "@/types/worklog";
+import TableWorklogs from "@/components/dashboard/TableWorklogs";
+import type { DateRangePreset, WorklogData } from "@/types/worklog";
+
+const DUMMY_WORKLOGS: WorklogData[] = [
+  {
+    id: "wl-001",
+    projectName: "Website Redesign",
+    clientName: "PT Maju Jaya",
+    taskDescription: "Fixing Bug Auth & Slices UI untuk halaman dashboard",
+    durationHours: 3.5,
+    hourlyRate: 200000,
+    logDate: "2026-09-10",
+    teamMember: "Andi Pratama",
+    billingStatus: "UNBILLED",
+  },
+  {
+    id: "wl-002",
+    projectName: "Mobile App Development",
+    clientName: "CV Kreatif Abadi",
+    taskDescription: "Implementasi endpoint API untuk modul notifikasi",
+    durationHours: 5,
+    hourlyRate: 250000,
+    logDate: "2026-09-11",
+    teamMember: "Siti Rahma",
+    billingStatus: "BILLED",
+    invoiceNumber: "INV-2026-001",
+  },
+  {
+    id: "wl-003",
+    projectName: "E-commerce Platform",
+    clientName: "PT Teknologi Nusantara",
+    taskDescription:
+      "Optimasi query database untuk halaman produk, indexing, dan caching layer Redis",
+    durationHours: 2.5,
+    hourlyRate: 300000,
+    logDate: "2026-09-11",
+    teamMember: "Budi Santoso",
+    billingStatus: "UNBILLED",
+  },
+  {
+    id: "wl-004",
+    projectName: "Website Redesign",
+    clientName: "PT Maju Jaya",
+    taskDescription: " slicing ulang komponen Navbar dan Sidebar responsif",
+    durationHours: 4,
+    hourlyRate: 200000,
+    logDate: "2026-09-12",
+    teamMember: "Andi Pratama",
+    billingStatus: "UNBILLED",
+  },
+  {
+    id: "wl-005",
+    projectName: "Internal Dashboard",
+    clientName: "Toko Modern Sentosa",
+    taskDescription:
+      "Setup CI/CD pipeline, konfigurasi Vercel dan environment variables",
+    durationHours: 1.5,
+    hourlyRate: 350000,
+    logDate: "2026-09-12",
+    teamMember: "Siti Rahma",
+    billingStatus: "BILLED",
+    invoiceNumber: "INV-2026-002",
+  },
+  {
+    id: "wl-006",
+    projectName: "E-commerce Platform",
+    clientName: "PT Teknologi Nusantara",
+    taskDescription:
+      "Review PR tim frontend, diskusi arsitektur state management dengan Zustand",
+    durationHours: 2,
+    hourlyRate: 300000,
+    logDate: "2026-09-13",
+    teamMember: "Budi Santoso",
+    billingStatus: "UNBILLED",
+  },
+];
 
 export default function WorklogsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,6 +88,47 @@ export default function WorklogsPage() {
   const [datePreset, setDatePreset] = useState<DateRangePreset>("THIS_MONTH");
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleToggleSelect = (worklogId: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(worklogId)
+        ? prev.filter((id) => id !== worklogId)
+        : [...prev, worklogId],
+    );
+  };
+
+  const handleToggleSelectAll = (worklogIds: string[]) => {
+    setSelectedIds(worklogIds);
+  };
+
+  const handleEditLog = (worklogId: string) => {
+    console.log("Edit worklog:", worklogId);
+  };
+
+  const handleDeleteLog = (worklogId: string) => {
+    console.log("Delete worklog:", worklogId);
+    setSelectedIds((prev) => prev.filter((id) => id !== worklogId));
+  };
+
+  const handleConvertToInvoice = () => {
+    console.log("Convert to invoice:", selectedIds);
+  };
+
+  const totalSelectedAmount = DUMMY_WORKLOGS.filter((w) =>
+    selectedIds.includes(w.id),
+  ).reduce((sum, w) => sum + w.durationHours * w.hourlyRate, 0);
+
+  const totalSelectedHours = DUMMY_WORKLOGS.filter((w) =>
+    selectedIds.includes(w.id),
+  ).reduce((sum, w) => sum + w.durationHours, 0);
+
+  const formatIDR = (amount: number) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(amount);
 
   return (
     <div className="max-w-full w-full flex flex-col justify-between p-6">
@@ -144,11 +260,34 @@ export default function WorklogsPage() {
           onCustomEndDateChange={setCustomEndDate}
         />
 
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <p className="text-sm text-slate-500 text-center py-8">
-            Worklog table akan ditampilkan di sini
-          </p>
-        </div>
+        {selectedIds.length > 0 && (
+          <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-indigo-900">
+                {selectedIds.length} worklog dipilih
+              </span>
+              <span className="text-xs text-indigo-700">
+                {totalSelectedHours.toFixed(2)} hrs —{" "}
+                {formatIDR(totalSelectedAmount)}
+              </span>
+            </div>
+            <button
+              onClick={handleConvertToInvoice}
+              className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            >
+              <FileText className="w-4 h-4" /> Convert to Invoice
+            </button>
+          </div>
+        )}
+
+        <TableWorklogs
+          worklogs={DUMMY_WORKLOGS}
+          selectedIds={selectedIds}
+          onToggleSelect={handleToggleSelect}
+          onToggleSelectAll={handleToggleSelectAll}
+          onEditLog={handleEditLog}
+          onDeleteLog={handleDeleteLog}
+        />
       </div>
     </div>
   );

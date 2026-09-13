@@ -6,9 +6,11 @@ export interface WorklogData {
   clientName: string;
   taskDescription: string;
   durationHours: number;
+  hourlyRate: number;
   logDate: string;
   teamMember: string;
   billingStatus: BillingStatus;
+  invoiceNumber?: string;
 }
 
 export interface ProjectOption {
