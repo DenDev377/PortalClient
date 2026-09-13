@@ -10,29 +10,29 @@ export default function NavbarPage() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const configPage: Record<string, { title: string; subtitle: string }> = {
-    "/dashboard": {
+    "/overview": {
       title: "Dashboard",
       subtitle: "Selamat datang kembali! Ini ringkasan hari ini.",
     },
-    "/dashboard/client": {
+    "/clients": {
       title: "Clients",
       subtitle: "Selamat datang pada halaman client",
     },
-    "/dashboard/projects": {
+    "/projects": {
       title: "Project",
       subtitle: "Selamat datang pada halaman project",
     },
-    "/dashboard/worklogs": {
+    "/worklogs": {
       title: "worklogs",
       subtitle: "Selamat datang pada halaman worklogs",
     },
-    "/dashboard/invoices": {
+    "/invoices": {
       title: "invoices",
       subtitle: "Selamat datang pada halaman invoices",
     },
   };
 
-  const currentConfig = configPage[pathname] || configPage["/dashboard"];
+  const currentConfig = configPage[pathname] || configPage["/overview"];
 
   return (
     <nav className="bg-white w-full border-b border-slate-200 shrink-0">
