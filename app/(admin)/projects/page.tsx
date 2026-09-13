@@ -175,7 +175,7 @@ export default function ProjectsPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm p-6 mt-6 flex flex-col">
-        <div className="flex justify-between items-center px-8">
+        <div className="flex justify-between items-center p-4">
           <div className="flex items-center gap-4">
             <input
               type="text"
@@ -216,7 +216,7 @@ export default function ProjectsPage() {
             </div>
             <button
               onClick={() => setModalOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg"
+              className="bg-[#E15A3E] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#C14A2F] transition-all duration-200 shadow-sm"
             >
               Add Project
             </button>
