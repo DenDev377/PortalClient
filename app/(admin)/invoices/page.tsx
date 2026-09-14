@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -6,13 +9,84 @@ import {
   Settings2,
 } from "lucide-react";
 
+import type { InvoiceData, InvoiceBuilderPayload } from "@/types/invoices";
+import TableInvoices from "@/components/admin/TableInvoices";
+import InvoiceBuilder from "@/components/admin/InvoiceBuilder";
+
+const DUMMY_INVOICES: InvoiceData[] = [
+  {
+    id: "1",
+    invoiceNumber: "INV-001",
+    clientName: "PT Maju Jaya",
+    clientEmail: "billing@majujaya.com",
+    status: "PAID",
+    issueDate: "2023-08-01",
+    dueDate: "2023-08-15",
+    nominalTotal: 500000,
+  },
+  {
+    id: "2",
+    invoiceNumber: "INV-002",
+    clientName: "CV Kreatif Abadi",
+    clientEmail: "finance@kreatifabadi.com",
+    status: "PENDING",
+    issueDate: "2023-08-02",
+    dueDate: "2023-08-16",
+    nominalTotal: 750000,
+  },
+  {
+    id: "3",
+    invoiceNumber: "INV-003",
+    clientName: "PT Teknologi Nusantara",
+    clientEmail: "ap@teknusantara.com",
+    status: "DRAFT",
+    issueDate: "2023-08-03",
+    dueDate: "2023-08-17",
+    nominalTotal: 1000000,
+  },
+  {
+    id: "4",
+    invoiceNumber: "INV-004",
+    clientName: "Toko Modern Sentosa",
+    clientEmail: "admin@modernsentosa.com",
+    status: "OVERDUE",
+    issueDate: "2023-08-04",
+    dueDate: "2023-08-18",
+    nominalTotal: 1500000,
+  },
+];
+
 export default function Invoices() {
+  const [builderOpen, setBuilderOpen] = useState(false);
+
+  const handlePreviewPdf = (invoiceId: string) => {
+    console.log("Preview PDF:", invoiceId);
+  };
+  const handleSendPortalLink = (invoiceId: string) => {
+    console.log("Send portal link:", invoiceId);
+  };
+  const handleCheckInvoice = (invoiceId: string) => {
+    console.log("Mark paid:", invoiceId);
+  };
+  const handleDeleteInvoice = (invoiceId: string) => {
+    console.log("Delete invoice:", invoiceId);
+  };
+
+  const handleSaveDraft = (payload: InvoiceBuilderPayload) => {
+    console.log("Save Draft:", payload);
+  };
+
+  const handlePublishAndSend = (payload: InvoiceBuilderPayload) => {
+    console.log("Publish & Send:", payload);
+  };
+
   return (
     <div className=" flex flex-col max-w-full w-full mx-auto p-6 justify-between">
       <div className="mb-4">
         <h1 className="text-2xl font-bold text-slate-900">Invoices Overview</h1>
         <p className="text-slate-500 mt-1">
-          Welcome back, here's what's happening with your invoices today.
+          Welcome back, here&apos;s what&apos;s happening with your invoices
+          today.
         </p>
       </div>
 
@@ -131,12 +205,31 @@ export default function Invoices() {
                 </svg>
               </div>
             </div>
-            <button className="bg-[#E15A3E] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#C14A2F] transition-all duration-200 shadow-sm">
-              Add Project
+            <button
+              onClick={() => setBuilderOpen(true)}
+              className="bg-[#E15A3E] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#C14A2F] transition-all duration-200 shadow-sm"
+            >
+              Create Invoice
             </button>
           </div>
         </div>
+        <div className="mt-4 overflow-x-auto">
+          <TableInvoices
+            invoices={DUMMY_INVOICES}
+            onPreviewPdf={handlePreviewPdf}
+            onSendPortalLink={handleSendPortalLink}
+            onCheckInvoice={handleCheckInvoice}
+            onDeleteInvoices={handleDeleteInvoice}
+          />
+        </div>
       </div>
+
+      <InvoiceBuilder
+        isOpen={builderOpen}
+        onClose={() => setBuilderOpen(false)}
+        onSaveDraft={handleSaveDraft}
+        onPublishAndSend={handlePublishAndSend}
+      />
     </div>
   );
 }
