@@ -1,13 +1,153 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
+
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  ADMIN
+  TEAM
+  CLIENT
+}
+
+enum ProjectStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum BillingType {
+  HOURLY_RATE
+  FIXED_PRICE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  UNPAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum WebhookStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+// ==========================================
+// MODELS
+// ==========================================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi Multi-Tenant
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Restrict)
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  address   String?   @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Soft Delete terapkan di sisi aplikasi (queries)
+
+  users     User[]
+  // Hindari Cascade agar riwayat keuangan dan pekerjaan tidak hilang (Restore/Restrict policy)
+  projects  Project[]
+  invoices  Invoice[]
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?       @db.Text
+  status      ProjectStatus @default(IN_PROGRESS)
+  billingType BillingType   @default(FIXED_PRICE)
+  rate        Decimal?      @db.Decimal(10, 2)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  clientId    String
+  client      Client        @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  worklogs    Worklog[]
+}
+
+model Worklog {
+  id          String   @id @default(cuid())
+  date        DateTime @default(now())
+  hours       Decimal  @db.Decimal(5, 2)
+  description String   @db.Text
+  isBilled    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projectId   String
+  // Jika project dihapus, worklog boleh dibuang karena bukan data keuangan utama,
+  // namun Client ke Project tetap Restrict.
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  invoiceNumber String        @unique
+  issueDate     DateTime      @default(now())
+  dueDate       DateTime
+  status        InvoiceStatus @default(DRAFT)
+  subTotal      Decimal       @db.Decimal(15, 2)
+  taxRate       Decimal       @default(0) @db.Decimal(5, 2)
+  taxAmount     Decimal       @default(0) @db.Decimal(15, 2)
+  totalAmount   Decimal       @db.Decimal(15, 2)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  
+  items                InvoiceItem[]
+  paymentTransactions  PaymentTransaction[]
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  description String
+  quantity    Int      @default(1)
+  unitPrice   Decimal  @db.Decimal(15, 2)
+  total       Decimal  @db.Decimal(15, 2)
+
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model PaymentTransaction {
+  id            String        @id @default(cuid())
+  transactionId String?       @unique // ID dari Payment Gateway (Midtrans, Stripe, dll)
+  amount        Decimal       @db.Decimal(15, 2)
+  paymentMethod String?
+  status        WebhookStatus @default(PENDING)
+  rawPayload    Json?         // Audit Log: Simpan raw Data webhook
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  invoiceId     String
+  invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 }

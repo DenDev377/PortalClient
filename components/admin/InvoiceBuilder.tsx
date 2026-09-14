@@ -247,7 +247,7 @@ export default function InvoiceBuilder({
     >
       <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden shadow-2xl flex flex-col ring-1 ring-slate-200/60">
         {/* Header */}
-        <div className="bg-gradient-to-br from-slate-50 to-white border-b border-slate-200 px-6 py-5 flex items-center justify-between">
+        <div className="bg-linear-to-br from-slate-50 to-white border-b border-slate-200 px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E15A3E] text-white shadow-sm">
               <FileText className="w-5 h-5" />
@@ -454,7 +454,8 @@ export default function InvoiceBuilder({
                   4
                 </span>
                 <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-1.5">
-                  <Calculator className="h-4 w-4 text-slate-400" /> Pajak & Diskon
+                  <Calculator className="h-4 w-4 text-slate-400" /> Pajak &
+                  Diskon
                 </h3>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -516,7 +517,7 @@ export default function InvoiceBuilder({
                   Ringkasan
                 </h3>
               </div>
-              <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-xl p-5 space-y-2.5 shadow-sm">
+              <div className="bg-linear-to-br from-slate-50 to-white border border-slate-200 rounded-xl p-5 space-y-2.5 shadow-sm">
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Subtotal</span>
                   <span className="font-medium text-slate-900">
@@ -579,7 +580,7 @@ export default function InvoiceBuilder({
               <Send className="w-4 h-4" />
               Terbitkan & Kirim
             </span>
-            <span className="block text-xs font-normal text-orange-100 mt-0.5 flex items-center justify-center gap-1">
+            <span className="text-xs font-normal text-orange-100 mt-0.5 flex items-center justify-center gap-1">
               <Lock className="h-3 w-3" /> Worklog dikunci
             </span>
           </button>
