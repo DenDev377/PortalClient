@@ -22,8 +22,8 @@ export async function GET(req: NextRequest) {
 
     const searchParams = new URL(req.url).searchParams;
     const search = searchParams.get("search") || "";
-    const clientId = searchParams.get("clientId") || "undefined";
-    const status = searchParams.get("status") || "undefined";
+    const clientId = searchParams.get("clientId") || undefined;
+    const status = searchParams.get("status") || undefined;
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(
       100,
