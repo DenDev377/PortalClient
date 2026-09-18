@@ -9,7 +9,7 @@ import prisma from "@/lib/prisma";
 // =============================================
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -17,8 +17,9 @@ export async function GET(
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     const client = await prisma.client.findUnique({
-      where: { id: params.id, deletedAt: null },
+      where: { id, deletedAt: null },
       include: {
         projects: { orderBy: { createdAt: "desc" } },
         invoices: { orderBy: { createdAt: "desc" } },
@@ -42,7 +43,7 @@ export async function GET(
 // =============================================
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -50,6 +51,7 @@ export async function PUT(
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await req.json();
     const { name, email, phone, address } = body;
 
@@ -57,9 +59,8 @@ export async function PUT(
       return NextResponse.json({ message: "Nama perusahaan wajib diisi" }, { status: 400 });
     }
 
-    // Pastikan client masih ada (belum soft deleted)
     const existing = await prisma.client.findUnique({
-      where: { id: params.id, deletedAt: null },
+      where: { id, deletedAt: null },
     });
 
     if (!existing) {
@@ -67,7 +68,7 @@ export async function PUT(
     }
 
     const updated = await prisma.client.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         email: email || null,
@@ -89,26 +90,25 @@ export async function PUT(
 // =============================================
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {
-      // Hanya ADMIN yang boleh delete (TEAM tidak)
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     const existing = await prisma.client.findUnique({
-      where: { id: params.id, deletedAt: null },
+      where: { id, deletedAt: null },
     });
 
     if (!existing) {
       return NextResponse.json({ message: "Client tidak ditemukan" }, { status: 404 });
     }
 
-    // Soft Delete: isi deletedAt, data tetap ada di database
     await prisma.client.update({
-      where: { id: params.id },
+      where: { id },
       data: { deletedAt: new Date() },
     });
 

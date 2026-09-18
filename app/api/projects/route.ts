@@ -17,30 +17,48 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search") || "";
     const status = searchParams.get("status") || "";
     const billingType = searchParams.get("billingType") || "";
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "10")));
+    const skip = (page - 1) * limit;
 
-    const projects = await prisma.project.findMany({
-      where: {
-        AND: [
-          {
-            OR: [
-              { name: { contains: search } },
-              { client: { name: { contains: search } } },
-            ],
+    const where = {
+      AND: [
+        {
+          OR: [
+            { name: { contains: search } },
+            { client: { name: { contains: search } } },
+          ],
+        },
+        status ? { status: status as "IN_PROGRESS" | "COMPLETED" | "CANCELLED" } : {},
+        billingType ? { billingType: billingType as "HOURLY_RATE" | "FIXED_PRICE" } : {},
+      ],
+    };
+
+    const [projects, total] = await Promise.all([
+      prisma.project.findMany({
+        where,
+        include: {
+          client: { select: { id: true, name: true } },
+          worklogs: {
+            orderBy: { date: "desc" },
+            take: 5,
+            select: { id: true, hours: true, isBilled: true },
           },
-          status ? { status: status as "IN_PROGRESS" | "COMPLETED" | "CANCELLED" } : {},
-          billingType
-            ? { billingType: billingType as "HOURLY_RATE" | "FIXED_PRICE" }
-            : {},
-        ],
-      },
-      include: {
-        client: { select: { id: true, name: true } },
-        worklogs: { select: { id: true, hours: true, isBilled: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.project.count({ where }),
+    ]);
 
-    return NextResponse.json(projects, { status: 200 });
+    return NextResponse.json(
+      {
+        data: projects,
+        meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("[PROJECTS_GET]", error);
     return NextResponse.json({ message: "Terjadi kesalahan server" }, { status: 500 });
@@ -85,7 +103,11 @@ export async function POST(req: NextRequest) {
       },
       include: {
         client: { select: { id: true, name: true } },
-        worklogs: { select: { id: true, hours: true, isBilled: true } },
+        worklogs: {
+          orderBy: { date: "desc" },
+          take: 5,
+          select: { id: true, hours: true, isBilled: true },
+        },
       },
     });
 
