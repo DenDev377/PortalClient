@@ -34,31 +34,22 @@ export async function GET(req: NextRequest) {
       ],
     };
 
-    const [projects, total] = await Promise.all([
-      prisma.project.findMany({
-        where,
-        include: {
-          client: { select: { id: true, name: true } },
-          worklogs: {
-            orderBy: { date: "desc" },
-            take: 5,
-            select: { id: true, hours: true, isBilled: true },
-          },
+    const projects = await prisma.project.findMany({
+      where,
+      include: {
+        client: { select: { id: true, name: true } },
+        worklogs: {
+          orderBy: { date: "desc" },
+          take: 5,
+          select: { id: true, hours: true, isBilled: true },
         },
-        orderBy: { createdAt: "desc" },
-        skip,
-        take: limit,
-      }),
-      prisma.project.count({ where }),
-    ]);
-
-    return NextResponse.json(
-      {
-        data: projects,
-        meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
       },
-      { status: 200 }
-    );
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    });
+
+    return NextResponse.json(projects, { status: 200 });
   } catch (error) {
     console.error("[PROJECTS_GET]", error);
     return NextResponse.json({ message: "Terjadi kesalahan server" }, { status: 500 });

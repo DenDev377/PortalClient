@@ -26,14 +26,13 @@ export async function GET(req: NextRequest) {
         ],
       },
       include: {
-        _count: {
-          select: {
-            projects: { where: { status: "IN_PROGRESS" } },
-          },
+        projects: {
+          where: { status: "IN_PROGRESS" },
+          select: { id: true },
         },
         invoices: {
           where: { status: { in: ["PENDING", "UNPAID", "OVERDUE"] } },
-          select: { status: true, totalAmount: true },
+          select: { id: true, status: true, totalAmount: true },
         },
       },
       orderBy: { createdAt: "desc" },
