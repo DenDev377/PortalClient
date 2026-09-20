@@ -4,63 +4,74 @@ import { useState } from "react";
 import { Plus, Clock } from "lucide-react";
 import type { ProjectOption } from "@/types/worklog";
 
-const DUMMY_PROJECTS: ProjectOption[] = [
-  { id: "1", projectName: "Website Redesign", clientName: "PT Maju Jaya" },
-  { id: "2", projectName: "Mobile App Development", clientName: "CV Kreatif Abadi" },
-  { id: "3", projectName: "E-commerce Platform", clientName: "PT Teknologi Nusantara" },
-  { id: "4", projectName: "Internal Dashboard", clientName: "Toko Modern Sentosa" },
-];
+interface QuickTimeLogBarProps {
+  projects: ProjectOption[];
+  onSuccess?: () => void;
+}
 
-export default function QuickTimeLogBar() {
+export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBarProps) {
   const [projectId, setProjectId] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [durationHours, setDurationHours] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleReset = () => {
     setProjectId("");
     setTaskDescription("");
     setDurationHours("");
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
-    const payload = {
-      projectId,
-      taskDescription,
-      durationHours: Number(durationHours),
-      logDate: new Date().toISOString().split("T")[0],
-    };
+    try {
+      const res = await fetch("/api/worklogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectId,
+          date: new Date().toISOString().split("T")[0],
+          hours: Number(durationHours),
+          description: taskDescription,
+        }),
+      });
 
-    console.log("Quick Log Payload:", payload);
-
-    setTimeout(() => {
-      setIsLoading(false);
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Gagal mencatat worklog");
+        return;
+      }
       handleReset();
-    }, 800);
+      onSuccess?.();
+    } catch (err) {
+      setError("Terjadi kesalahan jaringan");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <div className="flex items-center gap-2 mb-4">
         <Clock className="w-5 h-5 text-indigo-500" />
-        <h2 className="text-sm font-semibold text-slate-700">
-          Quick Time Log
-        </h2>
-        <span className="text-xs text-slate-400">
-          Catat jam kerja hari ini dengan cepat
-        </span>
+        <h2 className="text-sm font-semibold text-slate-700">Quick Time Log</h2>
+        <span className="text-xs text-slate-400">Catat jam kerja hari ini dengan cepat</span>
       </div>
+
+      {error && (
+        <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
           <div className="md:col-span-4">
-            <label
-              htmlFor="quickProject"
-              className="block text-xs font-medium text-slate-600 mb-1"
-            >
+            <label htmlFor="quickProject" className="block text-xs font-medium text-slate-600 mb-1">
               Proyek <span className="text-red-500">*</span>
             </label>
             <select
@@ -71,7 +82,7 @@ export default function QuickTimeLogBar() {
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all bg-white"
             >
               <option value="" disabled>-- Pilih Proyek --</option>
-              {DUMMY_PROJECTS.map((project) => (
+              {projects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.projectName} — {project.clientName}
                 </option>
@@ -80,10 +91,7 @@ export default function QuickTimeLogBar() {
           </div>
 
           <div className="md:col-span-5">
-            <label
-              htmlFor="quickTask"
-              className="block text-xs font-medium text-slate-600 mb-1"
-            >
+            <label htmlFor="quickTask" className="block text-xs font-medium text-slate-600 mb-1">
               Deskripsi Tugas <span className="text-red-500">*</span>
             </label>
             <input
@@ -98,10 +106,7 @@ export default function QuickTimeLogBar() {
           </div>
 
           <div className="md:col-span-2">
-            <label
-              htmlFor="quickDuration"
-              className="block text-xs font-medium text-slate-600 mb-1"
-            >
+            <label htmlFor="quickDuration" className="block text-xs font-medium text-slate-600 mb-1">
               Durasi (jam) <span className="text-red-500">*</span>
             </label>
             <input

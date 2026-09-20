@@ -1,94 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Clock, Coins, FileCheck, Timer, FileText } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Clock, Coins, FileCheck, Timer, FileText, Loader2 } from "lucide-react";
 import QuickTimeLogBar from "@/components/admin/QuickTimeLogBar";
 import WorklogToolbar from "@/components/admin/WorklogToolbar";
 import TableWorklogs from "@/components/admin/TableWorklogs";
 import EditWorklogModal from "@/components/admin/EditWorklogModal";
-import type { DateRangePreset, WorklogData } from "@/types/worklog";
-
-const DUMMY_WORKLOGS: WorklogData[] = [
-  {
-    id: "wl-001",
-    projectId: "1",
-    projectName: "Website Redesign",
-    clientName: "PT Maju Jaya",
-    taskDescription: "Fixing Bug Auth & Slices UI untuk halaman dashboard",
-    durationHours: 3.5,
-    hourlyRate: 200000,
-    logDate: "2026-09-10",
-    teamMember: "Andi Pratama",
-    billingStatus: "UNBILLED",
-  },
-  {
-    id: "wl-002",
-    projectId: "2",
-    projectName: "Mobile App Development",
-    clientName: "CV Kreatif Abadi",
-    taskDescription: "Implementasi endpoint API untuk modul notifikasi",
-    durationHours: 5,
-    hourlyRate: 250000,
-    logDate: "2026-09-11",
-    teamMember: "Siti Rahma",
-    billingStatus: "BILLED",
-    invoiceNumber: "INV-2026-001",
-  },
-  {
-    id: "wl-003",
-    projectId: "3",
-    projectName: "E-commerce Platform",
-    clientName: "PT Teknologi Nusantara",
-    taskDescription:
-      "Optimasi query database untuk halaman produk, indexing, dan caching layer Redis",
-    durationHours: 2.5,
-    hourlyRate: 300000,
-    logDate: "2026-09-11",
-    teamMember: "Budi Santoso",
-    billingStatus: "UNBILLED",
-  },
-  {
-    id: "wl-004",
-    projectId: "1",
-    projectName: "Website Redesign",
-    clientName: "PT Maju Jaya",
-    taskDescription: " slicing ulang komponen Navbar dan Sidebar responsif",
-    durationHours: 4,
-    hourlyRate: 200000,
-    logDate: "2026-09-12",
-    teamMember: "Andi Pratama",
-    billingStatus: "UNBILLED",
-  },
-  {
-    id: "wl-005",
-    projectId: "4",
-    projectName: "Internal Dashboard",
-    clientName: "Toko Modern Sentosa",
-    taskDescription:
-      "Setup CI/CD pipeline, konfigurasi Vercel dan environment variables",
-    durationHours: 1.5,
-    hourlyRate: 350000,
-    logDate: "2026-09-12",
-    teamMember: "Siti Rahma",
-    billingStatus: "BILLED",
-    invoiceNumber: "INV-2026-002",
-  },
-  {
-    id: "wl-006",
-    projectId: "3",
-    projectName: "E-commerce Platform",
-    clientName: "PT Teknologi Nusantara",
-    taskDescription:
-      "Review PR tim frontend, diskusi arsitektur state management dengan Zustand",
-    durationHours: 2,
-    hourlyRate: 300000,
-    logDate: "2026-09-13",
-    teamMember: "Budi Santoso",
-    billingStatus: "UNBILLED",
-  },
-];
+import type { DateRangePreset, ProjectOption, WorklogData } from "@/types/worklog";
 
 export default function WorklogsPage() {
+  const [worklogs, setWorklogs] = useState<WorklogData[]>([]);
+  const [projects, setProjects] = useState<ProjectOption[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
   const [selectedBilling, setSelectedBilling] = useState("");
@@ -97,7 +21,87 @@ export default function WorklogsPage() {
   const [customEndDate, setCustomEndDate] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [editingWorklog, setEditingWorklog] = useState<WorklogData | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<WorklogData | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  // ── Hitung rentang tanggal dari preset ──────────────────────
+  const getDateRange = useCallback(() => {
+    const today = new Date();
+    const end = today.toISOString().slice(0, 10);
+    let start = "";
+
+    if (datePreset === "THIS_WEEK") {
+      const day = today.getDay();
+      const diff = day === 0 ? 6 : day - 1;
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - diff);
+      start = monday.toISOString().slice(0, 10);
+    } else if (datePreset === "THIS_MONTH") {
+      start = new Date(today.getFullYear(), today.getMonth(), 1)
+        .toISOString()
+        .slice(0, 10);
+    } else if (datePreset === "CUSTOM") {
+      return { startDate: customStartDate, endDate: customEndDate };
+    }
+
+    return { startDate: start, endDate: end };
+  }, [datePreset, customStartDate, customEndDate]);
+
+  // ── Fetch Worklogs ──────────────────────────────────────────
+  const fetchWorklogs = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (searchQuery) params.set("search", searchQuery);
+      if (selectedProject) params.set("projectId", selectedProject);
+      if (selectedBilling)
+        params.set("isBilled", selectedBilling === "BILLED" ? "true" : "false");
+      const { startDate, endDate } = getDateRange();
+      if (startDate) params.set("startDate", startDate);
+      if (endDate) params.set("endDate", endDate);
+
+      const res = await fetch(`/api/worklogs?${params.toString()}`);
+      if (!res.ok) throw new Error("Gagal mengambil data");
+      const json = await res.json();
+      setWorklogs(json.data ?? []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [searchQuery, selectedProject, selectedBilling, getDateRange]);
+
+  // ── Fetch Projects untuk dropdown ───────────────────────────
+  const fetchProjects = useCallback(async () => {
+    try {
+      const res = await fetch("/api/projects?limit=100");
+      if (!res.ok) return;
+      const json = await res.json();
+      const options: ProjectOption[] = (json.data ?? []).map((p: {
+        id: string;
+        name: string;
+        client?: { name?: string };
+      }) => ({
+        id: p.id,
+        projectName: p.name,
+        clientName: p.client?.name ?? "",
+      }));
+      setProjects(options);
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    const delay = setTimeout(() => fetchWorklogs(), 300);
+    return () => clearTimeout(delay);
+  }, [fetchWorklogs]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  // ── Handlers ────────────────────────────────────────────────
   const handleToggleSelect = (worklogId: string) => {
     setSelectedIds((prev) =>
       prev.includes(worklogId)
@@ -111,28 +115,52 @@ export default function WorklogsPage() {
   };
 
   const handleEditLog = (worklogId: string) => {
-    const worklog = DUMMY_WORKLOGS.find((w) => w.id === worklogId);
-    if (worklog) {
-      setEditingWorklog(worklog);
-    }
+    const worklog = worklogs.find((w) => w.id === worklogId) || null;
+    setEditingWorklog(worklog);
   };
 
   const handleDeleteLog = (worklogId: string) => {
-    console.log("Delete worklog:", worklogId);
-    setSelectedIds((prev) => prev.filter((id) => id !== worklogId));
+    const target = worklogs.find((w) => w.id === worklogId) || null;
+    setDeleteTarget(target);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      await fetch(`/api/worklogs/${deleteTarget.id}`, { method: "DELETE" });
+      setSelectedIds((prev) => prev.filter((id) => id !== deleteTarget.id));
+      setDeleteTarget(null);
+      fetchWorklogs();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleConvertToInvoice = () => {
     console.log("Convert to invoice:", selectedIds);
   };
 
-  const totalSelectedAmount = DUMMY_WORKLOGS.filter((w) =>
-    selectedIds.includes(w.id),
-  ).reduce((sum, w) => sum + w.durationHours * w.hourlyRate, 0);
+  // ── Statistik dari data real ────────────────────────────────
+  const totalHours = worklogs.reduce((sum, w) => sum + w.durationHours, 0);
+  const unbilledValue = worklogs
+    .filter((w) => w.billingStatus === "UNBILLED")
+    .reduce((sum, w) => sum + w.durationHours * w.hourlyRate, 0);
+  const unbilledHours = worklogs
+    .filter((w) => w.billingStatus === "UNBILLED")
+    .reduce((sum, w) => sum + w.durationHours, 0);
+  const billedHours = worklogs
+    .filter((w) => w.billingStatus === "BILLED")
+    .reduce((sum, w) => sum + w.durationHours, 0);
 
-  const totalSelectedHours = DUMMY_WORKLOGS.filter((w) =>
-    selectedIds.includes(w.id),
-  ).reduce((sum, w) => sum + w.durationHours, 0);
+  const totalSelectedAmount = worklogs
+    .filter((w) => selectedIds.includes(w.id))
+    .reduce((sum, w) => sum + w.durationHours * w.hourlyRate, 0);
+  const totalSelectedHours = worklogs
+    .filter((w) => selectedIds.includes(w.id))
+    .reduce((sum, w) => sum + w.durationHours, 0);
 
   const formatIDR = (amount: number) =>
     new Intl.NumberFormat("id-ID", {
@@ -141,120 +169,75 @@ export default function WorklogsPage() {
       minimumFractionDigits: 0,
     }).format(amount);
 
+  const stats = [
+    {
+      label: "Total Hours",
+      value: totalHours.toFixed(1),
+      icon: <Clock className="w-5 h-5" />,
+      color: "indigo",
+      desc: "Total logged hours (current filter)",
+    },
+    {
+      label: "Unbilled Value",
+      value: formatIDR(unbilledValue),
+      icon: <Timer className="w-5 h-5" />,
+      color: "emerald",
+      desc: "Estimated value of unbilled hours",
+    },
+    {
+      label: "Unbilled Hours",
+      value: unbilledHours.toFixed(1),
+      icon: <Coins className="w-5 h-5" />,
+      color: "amber",
+      desc: "Accumulated unbilled worklog hours",
+    },
+    {
+      label: "Billed Hours",
+      value: billedHours.toFixed(1),
+      icon: <FileCheck className="w-5 h-5" />,
+      color: "red",
+      desc: "Hours that have been billed",
+    },
+  ];
+
   return (
     <div className="max-w-full w-full flex flex-col justify-between p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-slate-900">
-          {" "}
-          Worklogs Overview
-        </h1>
+        <h1 className="text-2xl font-bold text-slate-900"> Worklogs Overview</h1>
         <p className="text-slate-500 mt-1">
           {" "}
-          Welcome back, here&apos;s what&apos;s happening with your worklogs
-          today.
+          Welcome back, here&apos;s what&apos;s happening with your worklogs today.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-md cursor-default group">
-          <div className="flex items-start justify-between">
-            <h3 className="text-slate-500 text-sm font-semibold">
-              Total Hours
-            </h3>
-            <div className="p-2.5 rounded-lg bg-indigo-50 text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-100 transition-all duration-200">
-              <Clock className="w-5 h-5" />
+        {stats.map((card) => (
+          <div
+            key={card.label}
+            className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-md cursor-default group"
+          >
+            <div className="flex items-start justify-between">
+              <h3 className="text-slate-500 text-sm font-semibold">{card.label}</h3>
+              <div className={`p-2.5 rounded-lg bg-${card.color}-50 text-${card.color}-400 group-hover:scale-110 group-hover:bg-${card.color}-100 transition-all duration-200`}>
+                {card.icon}
+              </div>
+            </div>
+            <div className="mt-4">
+              <div className="flex items-baseline gap-1">
+                <p className="text-3xl font-bold tracking-tight text-slate-900">
+                  {isLoading ? "..." : card.value}
+                </p>
+              </div>
+              <div className="flex items-center gap-1 mt-2 text-sm">
+                <span className="text-slate-400">{card.desc}</span>
+              </div>
             </div>
           </div>
-          <div className="mt-4">
-            <div className="flex items-baseline gap-1">
-              <p className="text-3xl font-bold tracking-tight text-slate-900">
-                12
-              </p>
-            </div>
-            <div className="flex items-center gap-1 mt-2 text-sm">
-              <span className="text-slate-400">
-                Total logged hours this month
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 2: Unbilled Value */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-md cursor-default group">
-          <div className="flex items-start justify-between">
-            <h3 className="text-slate-500 text-sm font-semibold">
-              Unbilled Value
-            </h3>
-            <div className="p-2.5 rounded-lg bg-emerald-50 text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-100 transition-all duration-200">
-              <Timer className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-baseline gap-1">
-              <p className="text-3xl font-bold tracking-tight text-slate-900">
-                35
-              </p>
-            </div>
-            <div className="flex items-center gap-1 mt-2 text-sm">
-              <span className="text-slate-400">
-                Estimated value of unbilled hours
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 3: Unbilled Hours */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-md cursor-default group">
-          <div className="flex items-start justify-between">
-            <h3 className="text-slate-500 text-sm font-semibold">
-              Unbilled Hours
-            </h3>
-            <div className="p-2.5 rounded-lg bg-amber-50 text-amber-400 group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-200">
-              <Coins className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-baseline gap-1">
-              <p className="text-3xl font-bold tracking-tight text-slate-900">
-                85
-              </p>
-            </div>
-            <div className="flex items-center gap-1 mt-2 text-sm">
-              <span className="text-slate-400">
-                Accumulated unbilled worklog hours
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 4: Billed Hours */}
-
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-md cursor-default group">
-          <div className="flex items-start justify-between">
-            <h3 className="text-slate-500 text-sm font-semibold">
-              Billed Hours
-            </h3>
-            <div className="p-2.5 rounded-lg bg-red-50 text-red-400 group-hover:scale-110 group-hover:bg-red-100 transition-all duration-200">
-              <FileCheck className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-baseline gap-1">
-              <p className="text-3xl font-bold tracking-tight text-slate-900">
-                25
-              </p>
-            </div>
-            <div className="flex items-center gap-1 mt-2 text-sm">
-              <span className="text-slate-400">
-                Hours that have been billed
-              </span>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
       <div className="mt-6 flex flex-col gap-4">
-        <QuickTimeLogBar />
+        <QuickTimeLogBar projects={projects} onSuccess={fetchWorklogs} />
 
         <WorklogToolbar
           searchQuery={searchQuery}
@@ -269,6 +252,7 @@ export default function WorklogsPage() {
           onCustomStartDateChange={setCustomStartDate}
           customEndDate={customEndDate}
           onCustomEndDateChange={setCustomEndDate}
+          projects={projects}
         />
 
         {selectedIds.length > 0 && (
@@ -278,8 +262,7 @@ export default function WorklogsPage() {
                 {selectedIds.length} worklog dipilih
               </span>
               <span className="text-xs text-indigo-700">
-                {totalSelectedHours.toFixed(2)} hrs —{" "}
-                {formatIDR(totalSelectedAmount)}
+                {totalSelectedHours.toFixed(2)} hrs — {formatIDR(totalSelectedAmount)}
               </span>
             </div>
             <button
@@ -291,14 +274,27 @@ export default function WorklogsPage() {
           </div>
         )}
 
-        <TableWorklogs
-          worklogs={DUMMY_WORKLOGS}
-          selectedIds={selectedIds}
-          onToggleSelect={handleToggleSelect}
-          onToggleSelectAll={handleToggleSelectAll}
-          onEditLog={handleEditLog}
-          onDeleteLog={handleDeleteLog}
-        />
+        {isLoading ? (
+          <div className="flex items-center justify-center py-16 text-slate-400 gap-2 bg-white rounded-xl border border-slate-200">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-sm">Memuat data worklog...</span>
+          </div>
+        ) : worklogs.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-slate-400 bg-white rounded-xl border border-slate-200">
+            <Clock className="w-10 h-10 mb-3 text-slate-300" />
+            <p className="text-sm font-medium">Belum ada worklog</p>
+            <p className="text-xs mt-1">Gunakan Quick Time Log di atas untuk mencatat jam kerja</p>
+          </div>
+        ) : (
+          <TableWorklogs
+            worklogs={worklogs}
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+            onToggleSelectAll={handleToggleSelectAll}
+            onEditLog={handleEditLog}
+            onDeleteLog={handleDeleteLog}
+          />
+        )}
       </div>
 
       <EditWorklogModal
@@ -306,7 +302,36 @@ export default function WorklogsPage() {
         onClose={() => setEditingWorklog(null)}
         worklog={editingWorklog}
         isAdmin={true}
+        projects={projects}
+        onSuccess={fetchWorklogs}
       />
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6">
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Hapus Worklog</h3>
+            <p className="text-sm text-slate-500 mb-6">
+              Apakah kamu yakin ingin menghapus worklog{" "}
+              <span className="font-semibold text-slate-700">{deleteTarget.taskDescription}</span>?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 border border-slate-300 text-slate-700 rounded-lg py-2.5 text-sm hover:bg-slate-50 transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="flex-1 bg-red-600 text-white rounded-lg py-2.5 text-sm hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {isDeleting ? "Menghapus..." : "Ya, Hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,14 +1,7 @@
 "use client";
 
 import { Search, Settings2, Calendar } from "lucide-react";
-import type { DateRangePreset } from "@/types/worklog";
-
-const DUMMY_PROJECTS = [
-  { id: "1", projectName: "Website Redesign" },
-  { id: "2", projectName: "Mobile App Development" },
-  { id: "3", projectName: "E-commerce Platform" },
-  { id: "4", projectName: "Internal Dashboard" },
-];
+import type { DateRangePreset, ProjectOption } from "@/types/worklog";
 
 interface WorklogToolbarProps {
   searchQuery: string;
@@ -23,6 +16,7 @@ interface WorklogToolbarProps {
   onCustomStartDateChange: (value: string) => void;
   customEndDate: string;
   onCustomEndDateChange: (value: string) => void;
+  projects: ProjectOption[];
 }
 
 export default function WorklogToolbar({
@@ -38,6 +32,7 @@ export default function WorklogToolbar({
   onCustomStartDateChange,
   customEndDate,
   onCustomEndDateChange,
+  projects,
 }: WorklogToolbarProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col gap-3">
@@ -64,7 +59,7 @@ export default function WorklogToolbar({
               className="appearance-none bg-white border border-slate-300 rounded-lg pl-9 pr-8 py-2 text-sm text-slate-700 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all cursor-pointer"
             >
               <option value="">Semua Proyek</option>
-              {DUMMY_PROJECTS.map((project) => (
+              {projects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.projectName}
                 </option>
@@ -72,7 +67,7 @@ export default function WorklogToolbar({
             </select>
             <div className="absolute right-3 pointer-events-none text-slate-400">
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
               </svg>
             </div>
           </div>
@@ -90,7 +85,7 @@ export default function WorklogToolbar({
             </select>
             <div className="absolute right-3 pointer-events-none text-slate-400">
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
               </svg>
             </div>
           </div>
@@ -108,7 +103,7 @@ export default function WorklogToolbar({
             </select>
             <div className="absolute right-3 pointer-events-none text-slate-400">
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
               </svg>
             </div>
           </div>
@@ -129,7 +124,7 @@ export default function WorklogToolbar({
               id="startDate"
               value={customStartDate}
               onChange={(e) => onCustomStartDateChange(e.target.value)}
-              className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
+              className="border border-slate-300 rounded-lg px-2 py-1.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
             />
           </div>
           <span className="text-slate-400 text-xs">—</span>
@@ -145,7 +140,7 @@ export default function WorklogToolbar({
               id="endDate"
               value={customEndDate}
               onChange={(e) => onCustomEndDateChange(e.target.value)}
-              className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
+              className="border border-slate-300 rounded-lg px-2 py-1.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
             />
           </div>
         </div>

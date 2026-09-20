@@ -59,6 +59,10 @@ model User {
   // Relasi Multi-Tenant
   clientId  String?
   client    Client?  @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  // Relasi: worklog yang dicatat oleh user ini (team member yang log jam)
+  // onDelete: SetNull → user dihapus tetap meninggalkan riwayat jam kerja
+  worklogs  Worklog[]
 }
 
 model Client {
@@ -105,6 +109,20 @@ model Worklog {
   // Jika project dihapus, worklog boleh dibuang karena bukan data keuangan utama,
   // namun Client ke Project tetap Restrict.
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Siapa yang mencatat jam ini (team member). Optional agar data lama tetap valid.
+  // onDelete: SetNull → user dihapus, worklog tetap ada dengan userId=null.
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Tautan ke invoice saat worklog dikonversi jadi tagihan.
+  // Optional: worklog mulai "UNBILLED" (invoiceId=null), lalu diisi saat di-invoice.
+  // onDelete: SetNull → invoice dihapus, worklog kembali unbilled (bukan Cascade,
+  // karena menghapus invoice tidak boleh menghapus riwayat jam kerja).
+  // Catatan: isBilled (boolean) tetap dipakai sebagai filter cepat; invoiceId adalah
+  // sumber tautan otoritatif. Keduanya harus dijaga sinkron di lapisan aplikasi.
+  invoiceId   String?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
 }
 
 model Invoice {
@@ -125,6 +143,9 @@ model Invoice {
   
   items                InvoiceItem[]
   paymentTransactions  PaymentTransaction[]
+
+  // Worklog yang sudah ditagihkan ke invoice ini
+  worklogs             Worklog[]
 }
 
 model InvoiceItem {
