@@ -151,7 +151,7 @@ model Invoice {
 model InvoiceItem {
   id          String   @id @default(cuid())
   description String
-  quantity    Int      @default(1)
+  quantity    Decimal  @default(1) @db.Decimal(10, 2)
   unitPrice   Decimal  @db.Decimal(15, 2)
   total       Decimal  @db.Decimal(15, 2)
 
