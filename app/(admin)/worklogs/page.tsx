@@ -77,15 +77,15 @@ export default function WorklogsPage() {
       const res = await fetch("/api/projects?limit=100");
       if (!res.ok) return;
       const json = await res.json();
-      const options: ProjectOption[] = (json.data ?? []).map((p: {
-        id: string;
-        name: string;
-        client?: { name?: string };
-      }) => ({
-        id: p.id,
-        projectName: p.name,
-        clientName: p.client?.name ?? "",
-      }));
+const options: ProjectOption[] = (json ?? []).map((p: {
+	id: string;
+	name: string;
+	client?: { name?: string };
+}) => ({
+	id: p.id,
+	projectName: p.name,
+	clientName: p.client?.name ?? "",
+}));
       setProjects(options);
     } catch (err) {
       console.error(err);

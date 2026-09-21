@@ -9,7 +9,10 @@ interface QuickTimeLogBarProps {
   onSuccess?: () => void;
 }
 
-export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBarProps) {
+export default function QuickTimeLogBar({
+  projects,
+  onSuccess,
+}: QuickTimeLogBarProps) {
   const [projectId, setProjectId] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [durationHours, setDurationHours] = useState("");
@@ -59,7 +62,9 @@ export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBar
       <div className="flex items-center gap-2 mb-4">
         <Clock className="w-5 h-5 text-indigo-500" />
         <h2 className="text-sm font-semibold text-slate-700">Quick Time Log</h2>
-        <span className="text-xs text-slate-400">Catat jam kerja hari ini dengan cepat</span>
+        <span className="text-xs text-slate-400">
+          Catat jam kerja hari ini dengan cepat
+        </span>
       </div>
 
       {error && (
@@ -71,7 +76,10 @@ export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBar
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
           <div className="md:col-span-4">
-            <label htmlFor="quickProject" className="block text-xs font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="quickProject"
+              className="block text-xs font-medium text-slate-600 mb-1"
+            >
               Proyek <span className="text-red-500">*</span>
             </label>
             <select
@@ -81,7 +89,9 @@ export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBar
               required
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all bg-white"
             >
-              <option value="" disabled>-- Pilih Proyek --</option>
+              <option value="" disabled>
+                -- Pilih Proyek --
+              </option>
               {projects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.projectName} — {project.clientName}
@@ -91,7 +101,10 @@ export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBar
           </div>
 
           <div className="md:col-span-5">
-            <label htmlFor="quickTask" className="block text-xs font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="quickTask"
+              className="block text-xs font-medium text-slate-600 mb-1"
+            >
               Deskripsi Tugas <span className="text-red-500">*</span>
             </label>
             <input
@@ -106,7 +119,10 @@ export default function QuickTimeLogBar({ projects, onSuccess }: QuickTimeLogBar
           </div>
 
           <div className="md:col-span-2">
-            <label htmlFor="quickDuration" className="block text-xs font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="quickDuration"
+              className="block text-xs font-medium text-slate-600 mb-1"
+            >
               Durasi (jam) <span className="text-red-500">*</span>
             </label>
             <input
