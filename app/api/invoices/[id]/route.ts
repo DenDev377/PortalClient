@@ -47,8 +47,6 @@ export async function GET(
       );
     }
 
-    //Mapping data
-    // Field datar — transformasi tipe data
     const data = {
       id: invoice.id,
       invoiceNumber: invoice.invoiceNumber,
@@ -59,11 +57,7 @@ export async function GET(
       taxRate: invoice.taxRate.toString(),
       taxAmount: invoice.taxAmount.toString(),
       totalAmount: invoice.totalAmount.toString(),
-
-      // Object tunggal — langsung pakai
       client: invoice.client,
-
-      // Array — map tiap item
       items: invoice.items.map((item) => ({
         id: item.id,
         description: item.description,
@@ -71,8 +65,6 @@ export async function GET(
         unitPrice: item.unitPrice.toString(),
         total: item.total.toString(),
       })),
-
-      // Array — map tiap transaksi
       paymentTransactions: invoice.paymentTransactions.map((pt) => ({
         id: pt.id,
         transactionId: pt.transactionId,
@@ -85,6 +77,140 @@ export async function GET(
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error("[INVOICE_GET_ID]", error);
+    return NextResponse.json(
+      { message: "Terjadi kesalahan server" },
+      { status: 500 },
+    );
+  }
+}
+
+// =============================================
+// PUT /api/invoices/[id]
+// Edit invoice DRAFT. Bisa update line items, tax, dates.
+// Jika action === "PUBLISH", transisi ke PENDING dan kunci worklogs.
+// =============================================
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== "ADMIN") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await req.json();
+    const { lineItems, taxPercent, issueDate, dueDate, action } = body;
+
+    const existing = await prisma.invoice.findUnique({
+      where: { id },
+    });
+    if (!existing) {
+      return NextResponse.json(
+        { message: "Invoice tidak ditemukan" },
+        { status: 404 },
+      );
+    }
+    if (existing.status !== "DRAFT") {
+      return NextResponse.json(
+        { message: "Hanya invoice DRAFT yang bisa diedit" },
+        { status: 409 },
+      );
+    }
+
+    const newStatus = action === "PUBLISH" ? "PENDING" : existing.status;
+
+    const invoice = await prisma.$transaction(async (tx) => {
+      // 1. Unbind ALL worklogs yang terkait invoice ini
+      await tx.worklog.updateMany({
+        where: { invoiceId: id },
+        data: { invoiceId: null, isBilled: false },
+      });
+
+      // 2. Hapus semua invoice item lama
+      await tx.invoiceItem.deleteMany({
+        where: { invoiceId: id },
+      });
+
+      // 3. Hitung ulang subtotal dari line items baru
+      const subtotal = lineItems.reduce(
+        (sum: number, item: { subtotal: string }) => sum + Number(item.subtotal),
+        0,
+      );
+      const taxRateNum = taxPercent
+        ? Number(taxPercent)
+        : Number(existing.taxRate);
+      const taxAmount = (subtotal * taxRateNum) / 100;
+      const totalAmount = subtotal + taxAmount;
+
+      // 4. Buat invoice item baru
+      await tx.invoiceItem.createMany({
+        data: lineItems.map(
+          (
+            item: {
+              description: string;
+              hours: number;
+              rate: string;
+              subtotal: string;
+              worklogId?: string;
+            },
+          ) => ({
+            invoiceId: id,
+            description: item.description,
+            quantity: Number(item.hours),
+            unitPrice: Number(item.rate),
+            total: Number(item.subtotal),
+          }),
+        ),
+      });
+
+      // 5. Update invoice header
+      const updated = await tx.invoice.update({
+        where: { id },
+        data: {
+          status: newStatus,
+          subTotal: subtotal,
+          taxRate: taxRateNum,
+          taxAmount,
+          totalAmount,
+          ...(issueDate ? { issueDate: new Date(issueDate) } : {}),
+          ...(dueDate ? { dueDate: new Date(dueDate) } : {}),
+        },
+      });
+
+      // 6. Jika publish, kunci worklogs
+      if (action === "PUBLISH") {
+        const worklogIds = lineItems
+          .map((item: { worklogId?: string }) => item.worklogId)
+          .filter((id: string | null): id is string => Boolean(id));
+
+        if (worklogIds.length > 0) {
+          await tx.worklog.updateMany({
+            where: { id: { in: worklogIds } },
+            data: {
+              invoiceId: id,
+              isBilled: true,
+            },
+          });
+        }
+      }
+
+      return updated;
+    });
+
+    // 7. Return invoice lengkap dengan relasi
+    const result = await prisma.invoice.findUnique({
+      where: { id: invoice.id },
+      include: {
+        client: { select: { id: true, name: true, email: true } },
+        items: true,
+      },
+    });
+
+    return NextResponse.json(result, { status: 200 });
+  } catch (error) {
+    console.error("[INVOICE_PUT]", error);
     return NextResponse.json(
       { message: "Terjadi kesalahan server" },
       { status: 500 },
@@ -117,12 +243,10 @@ export async function DELETE(
       );
     }
     await prisma.$transaction(async (tx) => {
-      // Unbind worklogs: lepas kaitan + reset billing status
       await tx.worklog.updateMany({
         where: { invoiceId: id },
         data: { invoiceId: null, isBilled: false },
       });
-      // Hapus invoice
       await tx.invoice.delete({ where: { id } });
     });
 
