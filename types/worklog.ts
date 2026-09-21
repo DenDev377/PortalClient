@@ -7,7 +7,7 @@ export interface WorklogData {
   clientName: string;
   taskDescription: string;
   durationHours: number;
-  hourlyRate: number;
+  hourlyRate: string;
   logDate: string;
   teamMember: string;
   billingStatus: BillingStatus;

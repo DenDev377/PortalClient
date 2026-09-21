@@ -47,7 +47,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
     clientName: "PT Maju Jaya",
     taskDescription: "Fixing Bug Auth & Slices UI untuk halaman dashboard",
     durationHours: 3.5,
-    hourlyRate: 200000,
+    hourlyRate: "200000",
     logDate: "2026-09-10",
     teamMember: "Andi Pratama",
     billingStatus: "UNBILLED",
@@ -59,7 +59,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
     clientName: "PT Maju Jaya",
     taskDescription: "Slicing ulang komponen Navbar dan Sidebar responsif",
     durationHours: 4,
-    hourlyRate: 200000,
+    hourlyRate: "200000",
     logDate: "2026-09-12",
     teamMember: "Andi Pratama",
     billingStatus: "UNBILLED",
@@ -72,7 +72,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
     taskDescription:
       "Optimasi query database untuk halaman produk, indexing, dan caching Redis",
     durationHours: 2.5,
-    hourlyRate: 300000,
+    hourlyRate: "300000",
     logDate: "2026-09-11",
     teamMember: "Budi Santoso",
     billingStatus: "UNBILLED",
@@ -85,7 +85,7 @@ const DUMMY_WORKLOGS: WorklogData[] = [
     taskDescription:
       "Review PR tim frontend, diskusi arsitektur state management Zustand",
     durationHours: 2,
-    hourlyRate: 300000,
+    hourlyRate: "300000",
     logDate: "2026-09-13",
     teamMember: "Budi Santoso",
     billingStatus: "UNBILLED",
@@ -123,7 +123,7 @@ export default function InvoiceBuilder({
     );
   }, [selectedClient]);
 
-  const lineItems: InvoiceLineItem[] = useMemo(() => {
+const lineItems: InvoiceLineItem[] = useMemo(() => {
     return unbilledWorklogs
       .filter((w) => selectedWorklogIds.includes(w.id))
       .map((w) => ({
@@ -131,12 +131,12 @@ export default function InvoiceBuilder({
         description: `${w.projectName} — ${w.taskDescription}`,
         hours: w.durationHours,
         rate: w.hourlyRate,
-        subtotal: w.durationHours * w.hourlyRate,
+        subtotal: String(w.durationHours * Number(w.hourlyRate)),
       }));
   }, [unbilledWorklogs, selectedWorklogIds]);
 
   const calculations = useMemo(() => {
-    const subtotal = lineItems.reduce((sum, item) => sum + item.subtotal, 0);
+    const subtotal = lineItems.reduce((sum, item) => sum + Number(item.subtotal), 0);
     const dValue = Number(discountValue) || 0;
     const discountAmount =
       discountType === "PERCENT" ? (subtotal * dValue) / 100 : dValue;
@@ -195,11 +195,11 @@ export default function InvoiceBuilder({
     lineItems,
     discountType,
     discountValue: Number(discountValue) || 0,
-    taxPercent: Number(taxPercent) || 0,
-    subtotal: calculations.subtotal,
-    discountAmount: calculations.discountAmount,
-    taxAmount: calculations.taxAmount,
-    grandTotal: calculations.grandTotal,
+    taxPercent: String(Number(taxPercent) || 0),
+    subtotal: String(calculations.subtotal),
+    discountAmount: String(calculations.discountAmount),
+    taxAmount: String(calculations.taxAmount),
+    grandTotal: String(calculations.grandTotal),
     action,
   });
 
@@ -353,7 +353,7 @@ export default function InvoiceBuilder({
                   {unbilledWorklogs.map((worklog) => {
                     const isSelected = selectedWorklogIds.includes(worklog.id);
                     const itemSubtotal =
-                      worklog.durationHours * worklog.hourlyRate;
+                      worklog.durationHours * Number(worklog.hourlyRate);
                     return (
                       <label
                         key={worklog.id}
@@ -380,7 +380,7 @@ export default function InvoiceBuilder({
                             </span>
                             <span className="flex items-center gap-1">
                               <Tag className="h-3 w-3" />
-                              {formatIDR(worklog.hourlyRate)}/hr
+                              {formatIDR(Number(worklog.hourlyRate))}/hr
                             </span>
                             <span>{formatDate(worklog.logDate)}</span>
                           </div>
@@ -433,10 +433,10 @@ export default function InvoiceBuilder({
                           {item.hours}
                         </td>
                         <td className="px-4 py-3 text-right text-slate-700">
-                          {formatIDR(item.rate)}
+                          {formatIDR(Number(item.rate))}
                         </td>
                         <td className="px-4 py-3 text-right font-medium text-slate-900">
-                          {formatIDR(item.subtotal)}
+                          {formatIDR(Number(item.subtotal))}
                         </td>
                       </tr>
                     ))}

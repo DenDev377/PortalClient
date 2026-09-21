@@ -19,7 +19,7 @@ interface AddModalProjectProps {
     description: string | null;
     clientId: string;
     billingType: BillingType;
-    rate: number | null;
+    rate: string | null;
     status: ProjectStatusDB;
   } | null;
 }

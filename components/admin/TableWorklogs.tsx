@@ -168,7 +168,7 @@ export default function TableWorklogs({
 
           <tbody className="divide-y divide-slate-100">
             {worklogs.map((worklog) => {
-              const subtotal = worklog.durationHours * worklog.hourlyRate;
+              const subtotal = worklog.durationHours * Number(worklog.hourlyRate);
               const isChecked = selectedIds.includes(worklog.id);
 
               return (
@@ -229,7 +229,7 @@ export default function TableWorklogs({
 
                   <td className="whitespace-nowrap px-4 py-4">
                     <span className="text-slate-700">
-                      {formatIDR(worklog.hourlyRate)}/hr
+                      {formatIDR(Number(worklog.hourlyRate))}/hr
                     </span>
                   </td>
 

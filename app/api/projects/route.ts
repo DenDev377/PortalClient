@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
         name,
         description: description || null,
         billingType,
-        rate: rate ? Number(rate) : null,
+        rate: rate || null,
         status: "IN_PROGRESS",
         clientId,
       },

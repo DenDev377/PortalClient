@@ -197,7 +197,7 @@ export default function TableInvoices({
                 {/* Kolom 4: Total Nominal */}
                 <td className="whitespace-nowrap px-6 py-4">
                   <span className="font-semibold text-slate-900">
-                    {formatIDR(invoice.nominalTotal)}
+                    {formatIDR(Number(invoice.nominalTotal))}
                   </span>
                 </td>
 

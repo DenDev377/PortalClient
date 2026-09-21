@@ -55,7 +55,7 @@ export async function PUT(
         name,
         description: description || null,
         billingType,
-        rate: rate ? Number(rate) : null,
+        rate: rate || null,
         status: status || existing.status,
         clientId,
       },
@@ -87,6 +87,17 @@ export async function DELETE(
     const { id } = await params;
     const existing = await prisma.project.findUnique({ where: { id } });
     if (!existing) return NextResponse.json({ message: "Project tidak ditemukan" }, { status: 404 });
+
+    const hasWorklogs = await prisma.worklog.count({ where: { projectId: id } });
+    const hasInvoices = await prisma.invoice.count({ where: { worklogs: { some: { projectId: id } } } });
+
+    if (hasWorklogs > 0 || hasInvoices > 0) {
+      return NextResponse.json(
+        { message: "Project tidak bisa dihapus — masih memiliki worklog atau invoice terkait" },
+        { status: 409 }
+      );
+    }
+
     await prisma.project.delete({ where: { id } });
     return NextResponse.json({ message: "Project berhasil dihapus" }, { status: 200 });
   } catch (error) {

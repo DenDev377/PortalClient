@@ -55,10 +55,10 @@ export async function GET(
       status: invoice.status,
       issueDate: invoice.issueDate.toISOString().slice(0, 10),
       dueDate: invoice.dueDate.toISOString().slice(0, 10),
-      subTotal: Number(invoice.subTotal),
-      taxRate: Number(invoice.taxRate),
-      taxAmount: Number(invoice.taxAmount),
-      totalAmount: Number(invoice.totalAmount),
+      subTotal: invoice.subTotal.toString(),
+      taxRate: invoice.taxRate.toString(),
+      taxAmount: invoice.taxAmount.toString(),
+      totalAmount: invoice.totalAmount.toString(),
 
       // Object tunggal — langsung pakai
       client: invoice.client,
@@ -67,16 +67,16 @@ export async function GET(
       items: invoice.items.map((item) => ({
         id: item.id,
         description: item.description,
-        quantity: Number(item.quantity),
-        unitPrice: Number(item.unitPrice),
-        total: Number(item.total),
+        quantity: item.quantity.toString(),
+        unitPrice: item.unitPrice.toString(),
+        total: item.total.toString(),
       })),
 
       // Array — map tiap transaksi
       paymentTransactions: invoice.paymentTransactions.map((pt) => ({
         id: pt.id,
         transactionId: pt.transactionId,
-        amount: Number(pt.amount),
+        amount: pt.amount.toString(),
         status: pt.status,
         createdAt: pt.createdAt.toISOString().slice(0, 10),
       })),

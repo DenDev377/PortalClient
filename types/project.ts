@@ -18,7 +18,7 @@ export interface Project {
   description: string | null;
   status: ProjectStatusDB;
   billingType: BillingType;
-  rate: number | null;
+  rate: string | null;
   createdAt: string;
   updatedAt: string;
   clientId: string;
@@ -39,7 +39,7 @@ export interface ProjectPayload {
   description?: string;
   clientId: string;
   billingType: BillingType;
-  rate?: number | null;
+  rate?: string | null;
   status?: ProjectStatusDB;
 }
 

@@ -60,10 +60,10 @@ export async function GET(req: NextRequest) {
       invoiceNumber: inv.invoiceNumber,
       clientName: inv.client.name,
       clientEmail: inv.client.email ?? "",
-      status: inv.status, // enum, langsung pakai
+      status: inv.status,
       issueDate: inv.issueDate.toISOString().slice(0, 10),
       dueDate: inv.dueDate.toISOString().slice(0, 10),
-      nominalTotal: Number(inv.totalAmount),
+      nominalTotal: inv.totalAmount.toString(),
     }));
 
     return NextResponse.json(

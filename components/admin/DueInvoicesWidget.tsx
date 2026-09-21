@@ -72,11 +72,11 @@ export default function DueInvoicesWidget() {
       <div className="flex-1 space-y-3 overflow-y-auto max-h-80 pr-1">
         {mockInvoices.map((inv) => {
           const daysLeft = getDaysUntil(inv.dueDate);
-          let urgency = "normal";
+          let urgency: "overdue" | "urgent" | "normal" = "normal";
           if (daysLeft <= 0) urgency = "overdue";
           else if (daysLeft <= 3) urgency = "urgent";
 
-          const urgencyStyles = {
+          const urgencyStyles: Record<typeof urgency, string> = {
             overdue: "border-rose-200 bg-rose-50/50",
             urgent: "border-amber-200 bg-amber-50/50",
             normal: "border-slate-100 bg-white",

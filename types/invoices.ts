@@ -1,12 +1,6 @@
-import { InvoiceStatus } from "@prisma/client";
+import type { InvoiceStatus, WebhookStatus } from "@prisma/client";
 
-export type InvoicesStatus =
-  | "DRAFT"
-  | "PENDING"
-  | "UNPAID"
-  | "PAID"
-  | "OVERDUE"
-  | "CANCELLED";
+export type InvoicesStatus = InvoiceStatus;
 
 export interface InvoiceData {
   id: string;
@@ -16,7 +10,7 @@ export interface InvoiceData {
   status: InvoicesStatus;
   issueDate: string;
   dueDate: string;
-  nominalTotal: number;
+  nominalTotal: string;
 }
 
 export interface InvoiceClientInfo {
@@ -30,15 +24,15 @@ export interface InvoiceClientInfo {
 export interface InvoiceItemData {
   id: string;
   description: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
+  quantity: string;
+  unitPrice: string;
+  total: string;
 }
 
 export interface PaymentTransactionData {
   id: string;
   transactionId: string | null;
-  amount: number;
+  amount: string;
   status: string;
   createdAt: string;
 }
@@ -49,10 +43,10 @@ export interface InvoiceDetail {
   status: InvoiceStatus;
   issueDate: string;
   dueDate: string;
-  subTotal: number;
-  taxRate: number;
-  taxAmount: number;
-  totalAmount: number;
+  subTotal: string;
+  taxRate: string;
+  taxAmount: string;
+  totalAmount: string;
   client: InvoiceClientInfo;
   items: InvoiceItemData[];
   paymentTransactions: PaymentTransactionData[];
@@ -68,8 +62,8 @@ export interface InvoiceLineItem {
   worklogId: string;
   description: string;
   hours: number;
-  rate: number;
-  subtotal: number;
+  rate: string;
+  subtotal: string;
 }
 
 export type DiscountType = "PERCENT" | "NOMINAL";
@@ -80,10 +74,10 @@ export interface InvoiceBuilderPayload {
   lineItems: InvoiceLineItem[];
   discountType: DiscountType;
   discountValue: number;
-  taxPercent: number;
-  subtotal: number;
-  discountAmount: number;
-  taxAmount: number;
-  grandTotal: number;
+  taxPercent: string;
+  subtotal: string;
+  discountAmount: string;
+  taxAmount: string;
+  grandTotal: string;
   action: "DRAFT" | "PUBLISH";
 }

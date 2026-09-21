@@ -147,7 +147,7 @@ const options: ProjectOption[] = (json ?? []).map((p: {
   const totalHours = worklogs.reduce((sum, w) => sum + w.durationHours, 0);
   const unbilledValue = worklogs
     .filter((w) => w.billingStatus === "UNBILLED")
-    .reduce((sum, w) => sum + w.durationHours * w.hourlyRate, 0);
+    .reduce((sum, w) => sum + w.durationHours * Number(w.hourlyRate), 0);
   const unbilledHours = worklogs
     .filter((w) => w.billingStatus === "UNBILLED")
     .reduce((sum, w) => sum + w.durationHours, 0);
@@ -157,7 +157,7 @@ const options: ProjectOption[] = (json ?? []).map((p: {
 
   const totalSelectedAmount = worklogs
     .filter((w) => selectedIds.includes(w.id))
-    .reduce((sum, w) => sum + w.durationHours * w.hourlyRate, 0);
+    .reduce((sum, w) => sum + w.durationHours * Number(w.hourlyRate), 0);
   const totalSelectedHours = worklogs
     .filter((w) => selectedIds.includes(w.id))
     .reduce((sum, w) => sum + w.durationHours, 0);

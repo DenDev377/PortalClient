@@ -107,6 +107,16 @@ export async function DELETE(
       return NextResponse.json({ message: "Client tidak ditemukan" }, { status: 404 });
     }
 
+    const hasProjects = await prisma.project.count({ where: { clientId: id } });
+    const hasInvoices = await prisma.invoice.count({ where: { clientId: id } });
+
+    if (hasProjects > 0 || hasInvoices > 0) {
+      return NextResponse.json(
+        { message: "Client tidak bisa dihapus — masih memiliki project atau invoice terkait" },
+        { status: 409 }
+      );
+    }
+
     await prisma.client.update({
       where: { id },
       data: { deletedAt: new Date() },

@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
       clientName: w.project.client.name,
       taskDescription: w.description,
       durationHours: Number(w.hours),
-      hourlyRate: w.project.rate ? Number(w.project.rate) : 0,
+      hourlyRate: w.project.rate?.toString() ?? "0",
       logDate: w.date.toISOString().slice(0, 10),
       teamMember: w.user?.name ?? "",
       billingStatus: (w.isBilled ? "BILLED" : "UNBILLED") as
@@ -207,7 +207,7 @@ export async function POST(req: NextRequest) {
       clientName: worklog.project.client.name,
       taskDescription: worklog.description,
       durationHours: Number(worklog.hours),
-      hourlyRate: worklog.project.rate ? Number(worklog.project.rate) : 0,
+      hourlyRate: worklog.project.rate?.toString() ?? "0",
       logDate: worklog.date.toISOString().slice(0, 10),
       teamMember: worklog.user?.name ?? "",
       billingStatus: (worklog.isBilled ? "BILLED" : "UNBILLED") as

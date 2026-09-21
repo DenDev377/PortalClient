@@ -22,7 +22,7 @@ const DUMMY_INVOICES: InvoiceData[] = [
     status: "PAID",
     issueDate: "2023-08-01",
     dueDate: "2023-08-15",
-    nominalTotal: 500000,
+    nominalTotal: "500000",
   },
   {
     id: "2",
@@ -32,7 +32,7 @@ const DUMMY_INVOICES: InvoiceData[] = [
     status: "PENDING",
     issueDate: "2023-08-02",
     dueDate: "2023-08-16",
-    nominalTotal: 750000,
+    nominalTotal: "750000",
   },
   {
     id: "3",
@@ -42,7 +42,7 @@ const DUMMY_INVOICES: InvoiceData[] = [
     status: "DRAFT",
     issueDate: "2023-08-03",
     dueDate: "2023-08-17",
-    nominalTotal: 1000000,
+    nominalTotal: "1000000",
   },
   {
     id: "4",
@@ -52,7 +52,7 @@ const DUMMY_INVOICES: InvoiceData[] = [
     status: "OVERDUE",
     issueDate: "2023-08-04",
     dueDate: "2023-08-18",
-    nominalTotal: 1500000,
+    nominalTotal: "1500000",
   },
 ];
 

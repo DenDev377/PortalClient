@@ -13,9 +13,8 @@ export interface Client {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  // Relasi yang di-include dari API
   projects: { id: string }[];
-  invoices: { id: string; status: string; totalAmount: number }[];
+  invoices: { id: string; status: string; totalAmount: string }[];
 }
 
 // Payload untuk membuat / mengedit client
