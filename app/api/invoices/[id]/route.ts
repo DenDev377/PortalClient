@@ -91,3 +91,50 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== "ADMIN") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const existing = await prisma.invoice.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json(
+        { message: "Invoice tidak ditemukan" },
+        { status: 404 },
+      );
+    }
+    if (existing.status === "PAID") {
+      return NextResponse.json(
+        { message: "Invoice yang sudah dibayar tidak dapat dihapus" },
+        { status: 409 },
+      );
+    }
+    await prisma.$transaction(async (tx) => {
+      // Unbind worklogs: lepas kaitan + reset billing status
+      await tx.worklog.updateMany({
+        where: { invoiceId: id },
+        data: { invoiceId: null, isBilled: false },
+      });
+      // Hapus invoice
+      await tx.invoice.delete({ where: { id } });
+    });
+
+    return NextResponse.json(
+      { message: "Invoice berhasil dihapus" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("[INVOICE_DELETE]", error);
+    return NextResponse.json(
+      { message: "Terjadi kesalahan server" },
+      { status: 500 },
+    );
+  }
+}
