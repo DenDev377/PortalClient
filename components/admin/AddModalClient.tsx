@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { ClientPayload } from "@/types/client";
 
 interface AddModalClientProps {
   isOpen: boolean;
   onClose: () => void;
-  // Callback setelah berhasil: kembalikan data client baru ke parent
   onSuccess: () => void;
-  // Jika diisi, modal berfungsi sebagai Edit; jika kosong, berfungsi sebagai Add
   editData?: {
     id: string;
     name: string;
@@ -54,7 +52,6 @@ export default function AddModalClient({
     setError("");
 
     try {
-      // Tentukan URL dan HTTP Method sesuai mode (Add vs Edit)
       const url = isEditMode
         ? `/api/clients/${editData!.id}`
         : "/api/clients";
@@ -73,7 +70,6 @@ export default function AddModalClient({
         return;
       }
 
-      // Beritahu parent untuk refresh data
       onSuccess();
       handleResetForm();
       onClose();
@@ -93,6 +89,10 @@ export default function AddModalClient({
     if (e.target === e.currentTarget) handleClose();
   };
 
+  useEffect(() => {
+    if (isOpen) window.scrollTo(0, 0);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -100,96 +100,103 @@ export default function AddModalClient({
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 relative max-h-[90vh] overflow-y-auto">
-        {/* Close */}
-        <button
-          onClick={handleClose}
-          className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-          type="button"
-        >
-          <X className="w-5 h-5" />
-        </button>
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 flex flex-col max-h-[90vh]">
+        {/* Header */}
+        <div className="p-6 pb-4">
+          <button
+            onClick={handleClose}
+            className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            type="button"
+          >
+            <X className="w-5 h-5" />
+          </button>
 
-        <h2 className="text-xl font-bold text-slate-900 mb-1">
-          {isEditMode ? "Edit Data Client" : "Tambah Client Baru"}
-        </h2>
-        <p className="text-sm text-slate-500 mb-6">
-          {isEditMode
-            ? "Perbarui informasi perusahaan klien."
-            : "Isi informasi perusahaan klien baru."}
-        </p>
+          <h2 className="text-xl font-bold text-slate-900 mb-1">
+            {isEditMode ? "Edit Data Client" : "Tambah Client Baru"}
+          </h2>
+          <p className="text-sm text-slate-500">
+            {isEditMode
+              ? "Perbarui informasi perusahaan klien."
+              : "Isi informasi perusahaan klien baru."}
+          </p>
+        </div>
 
         {/* Error */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+          <div className="mx-6 mb-2 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Nama Perusahaan */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Nama Perusahaan <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              required
-              value={form.name}
-              onChange={handleChange}
-              placeholder="PT. Contoh Perusahaan"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
-            />
-          </div>
+        {/* Form — scrollable */}
+        <form id="client-form" onSubmit={handleSubmit} className="overflow-y-auto px-6 flex-1 min-h-0">
+          <div className="space-y-4 py-2">
+            {/* Nama Perusahaan */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Nama Perusahaan <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="name"
+                required
+                value={form.name}
+                onChange={handleChange}
+                placeholder="PT. Contoh Perusahaan"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
+              />
+            </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Email Penagihan
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="billing@company.com"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
-            />
-          </div>
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Email Penagihan
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="billing@company.com"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
+              />
+            </div>
 
-          {/* Nomor Telepon */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Nomor Telepon
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="08123456789"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
-            />
-          </div>
+            {/* Nomor Telepon */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Nomor Telepon
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="08123456789"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all"
+              />
+            </div>
 
-          {/* Alamat */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Alamat
-            </label>
-            <textarea
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              rows={3}
-              placeholder="Jl. Contoh No. 123, Jakarta"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all resize-none"
-            />
+            {/* Alamat */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Alamat
+              </label>
+              <textarea
+                name="address"
+                value={form.address}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Jl. Contoh No. 123, Jakarta"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent transition-all resize-none"
+              />
+            </div>
           </div>
+        </form>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-2">
+        {/* Footer — selalu visible */}
+        <div className="p-6 pt-4 border-t border-slate-100">
+          <div className="flex gap-3">
             <button
               type="button"
               onClick={handleClose}
@@ -199,6 +206,7 @@ export default function AddModalClient({
             </button>
             <button
               type="submit"
+              form="client-form"
               disabled={isLoading}
               className="flex-1 bg-[#E15A3E] text-white rounded-lg py-2.5 text-sm font-medium hover:bg-[#C14A2F] transition-colors disabled:opacity-50"
             >
@@ -209,7 +217,7 @@ export default function AddModalClient({
                 : "Tambah Client"}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

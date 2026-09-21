@@ -53,7 +53,10 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="overflow-x-auto">
+      <div 
+        className="overflow-x-auto"
+        style={{ minHeight: clients.length > 0 ? "350px" : "auto" }}
+      >
         <table className="w-full text-left text-sm">
           {/* Header Tabel */}
           <thead className="border-b border-slate-200 bg-slate-100 text-xs uppercase tracking-wider text-slate-600">
@@ -84,7 +87,7 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
 
           {/* Body Tabel */}
           <tbody className="divide-y divide-slate-100">
-            {clients.map((client) => (
+            {clients.map((client, index) => (
               <tr
                 key={client.id}
                 className="transition-colors hover:bg-slate-50"
@@ -180,7 +183,9 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
 
                     {/* Dropdown Menu */}
                     {activeDropdown === client.id && (
-                      <div className="absolute right-0 z-20 mt-2 w-48 rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
+                      <div className={`absolute right-0 z-50 w-48 rounded-xl border border-slate-200 bg-white py-1 shadow-lg ${
+                        index >= 2 ? "bottom-full mb-2" : "top-full mt-2"
+                      }`}>
                         <button
                           onClick={() => {
                             onViewWorkspace(client.id);

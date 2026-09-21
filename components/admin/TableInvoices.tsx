@@ -93,7 +93,10 @@ export default function TableInvoices({
 
   return (
     <div className="overflow-hidden w-full rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto"
+        style={{ minHeight: invoices.length > 0 ? "350px" : "auto" }}
+      >
         <table className="w-full text-left text-sm">
           <thead className="border-b border-slate-200 bg-slate-100 text-xs uppercase tracking-wider text-slate-600">
             <tr>
@@ -181,9 +184,7 @@ export default function TableInvoices({
                       })()}
                     {invoice.status === "OVERDUE" &&
                       (() => {
-                        const days = Math.abs(
-                          getDaysUntilDue(invoice.dueDate),
-                        );
+                        const days = Math.abs(getDaysUntilDue(invoice.dueDate));
                         return (
                           <span className="text-xs font-medium text-rose-600 mt-0.5">
                             Terlambat {days} hari

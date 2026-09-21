@@ -1,4 +1,12 @@
-export type InvoicesStatus = "DRAFT" | "PENDING" | "UNPAID" | "PAID" | "OVERDUE" | "CANCELLED";
+import { InvoiceStatus } from "@prisma/client";
+
+export type InvoicesStatus =
+  | "DRAFT"
+  | "PENDING"
+  | "UNPAID"
+  | "PAID"
+  | "OVERDUE"
+  | "CANCELLED";
 
 export interface InvoiceData {
   id: string;
@@ -9,6 +17,45 @@ export interface InvoiceData {
   issueDate: string;
   dueDate: string;
   nominalTotal: number;
+}
+
+export interface InvoiceClientInfo {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+}
+
+export interface InvoiceItemData {
+  id: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+}
+
+export interface PaymentTransactionData {
+  id: string;
+  transactionId: string | null;
+  amount: number;
+  status: string;
+  createdAt: string;
+}
+
+export interface InvoiceDetail {
+  id: string;
+  invoiceNumber: string;
+  status: InvoiceStatus;
+  issueDate: string;
+  dueDate: string;
+  subTotal: number;
+  taxRate: number;
+  taxAmount: number;
+  totalAmount: number;
+  client: InvoiceClientInfo;
+  items: InvoiceItemData[];
+  paymentTransactions: PaymentTransactionData[];
 }
 
 export interface ClientOption {

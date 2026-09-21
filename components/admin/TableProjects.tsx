@@ -99,7 +99,10 @@ export default function TableProjects({
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto"
+        style={{ minHeight: projects.length > 0 ? "350px" : "auto" }}
+      >
         <table className="w-full text-left text-sm">
           <thead className="border-b border-slate-200 bg-slate-100 text-xs uppercase tracking-wider text-slate-600">
             <tr>
