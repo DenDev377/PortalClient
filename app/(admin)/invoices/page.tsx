@@ -58,6 +58,12 @@ const DUMMY_INVOICES: InvoiceData[] = [
 
 export default function Invoices() {
   const [builderOpen, setBuilderOpen] = useState(false);
+  const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
+
+  const handleEditInvoice = (invoiceId: string) => {
+    setBuilderOpen(true);
+    setEditingInvoiceId(invoiceId);
+  };
 
   const handlePreviewPdf = (invoiceId: string) => {
     console.log("Preview PDF:", invoiceId);
@@ -214,22 +220,24 @@ export default function Invoices() {
           </div>
         </div>
         <div className="mt-4 overflow-x-auto">
-          <TableInvoices
-            invoices={DUMMY_INVOICES}
-            onPreviewPdf={handlePreviewPdf}
-            onSendPortalLink={handleSendPortalLink}
-            onCheckInvoice={handleCheckInvoice}
-            onDeleteInvoices={handleDeleteInvoice}
-          />
+<TableInvoices
+             invoices={DUMMY_INVOICES}
+             onPreviewPdf={handlePreviewPdf}
+             onSendPortalLink={handleSendPortalLink}
+             onCheckInvoice={handleCheckInvoice}
+             onDeleteInvoices={handleDeleteInvoice}
+             onEditInvoices={handleEditInvoice}
+           />
         </div>
       </div>
 
-      <InvoiceBuilder
-        isOpen={builderOpen}
-        onClose={() => setBuilderOpen(false)}
-        onSaveDraft={handleSaveDraft}
-        onPublishAndSend={handlePublishAndSend}
-      />
+<InvoiceBuilder
+         isOpen={builderOpen}
+         onClose={() => setBuilderOpen(false)}
+         onSaveDraft={handleSaveDraft}
+         onPublishAndSend={handlePublishAndSend}
+         editingInvoiceId={editingInvoiceId}
+       />
     </div>
   );
 }

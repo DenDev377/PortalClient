@@ -12,6 +12,7 @@ import {
   Trash2,
   CheckCircle2,
   AlertCircle,
+  Edit,
 } from "lucide-react";
 import { useState } from "react";
 import type { InvoiceData, InvoicesStatus } from "@/types/invoices";
@@ -22,6 +23,7 @@ interface TableInvoicesProps {
   onSendPortalLink: (invoicesId: string) => void;
   onCheckInvoice: (invoicesId: string) => void;
   onDeleteInvoices: (invoicesId: string) => void;
+  onEditInvoices: (invoicesId: string) => void;
 }
 
 export default function TableInvoices({
@@ -30,6 +32,7 @@ export default function TableInvoices({
   onSendPortalLink,
   onCheckInvoice,
   onDeleteInvoices,
+  onEditInvoices,
 }: TableInvoicesProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const toggleDropdown = (id: string) => {
@@ -249,6 +252,17 @@ export default function TableInvoices({
                           Lunas Manual
                         </button>
                         <div className="my-1 border-t border-slate-100" />
+                        {invoice.status === "DRAFT" && (
+                          <button
+                            onClick={() => {
+                              onEditInvoices(invoice.id);
+                              setActiveDropdown(null);
+                            }}
+                            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50"
+                          >
+                            <Edit className="h-4 w-4" /> Edit Invoice
+                          </button>
+                        )}
                         <button
                           onClick={() => {
                             onDeleteInvoices(invoice.id);

@@ -26,6 +26,7 @@ interface InvoiceBuilderProps {
   onClose: () => void;
   onSaveDraft: (payload: InvoiceBuilderPayload) => void;
   onPublishAndSend: (payload: InvoiceBuilderPayload) => void;
+  editingInvoiceId?: string | null;
 }
 
 export default function InvoiceBuilder({
@@ -33,6 +34,7 @@ export default function InvoiceBuilder({
   onClose,
   onSaveDraft,
   onPublishAndSend,
+  editingInvoiceId: externalEditingId,
 }: InvoiceBuilderProps) {
   const [clientId, setClientId] = useState("");
   const [preFilledItems, setPreFilledItems] = useState<InvoiceLineItem[]>([]);
@@ -41,20 +43,25 @@ export default function InvoiceBuilder({
   const [discountValue, setDiscountValue] = useState("");
   const [taxPercent, setTaxPercent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
+  const [internalEditingId, setInternalEditingId] = useState<string | null>(null);
   const [worklogs, setWorklogs] = useState<WorklogData[]>([]);
   const [clients, setClients] = useState<ClientData[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (editingInvoiceId) {
+    if (externalEditingId) {
+      setInternalEditingId(externalEditingId);
+    }
+  }, [externalEditingId]);
+
+  useEffect(() => {
+    if (internalEditingId) {
       setLoading(true);
-      fetch(`/api/invoices/${editingInvoiceId}`)
+      fetch(`/api/invoices/${internalEditingId}`)
         .then((res) => res.json())
         .then((data) => {
           setClientId(data.client.id);
           setTaxPercent(data.taxRate);
-          // pre-fill lineItems
           const items: InvoiceLineItem[] = data.items.map(
             (item: {
               description: string;
@@ -73,9 +80,10 @@ export default function InvoiceBuilder({
           setLoading(false);
         });
     }
-  }, [editingInvoiceId]);
+  }, [internalEditingId]);
+
   const preFillFromInvoice = (invoice: InvoiceDetail) => {
-    setEditingInvoiceId(invoice.id);
+    setInternalEditingId(invoice.id);
     setClientId(invoice.client.id);
   };
 
@@ -162,10 +170,10 @@ export default function InvoiceBuilder({
 
   const handleSubmit = async () => {
     const payload = buildPayload("PUBLISH");
-    const url = editingInvoiceId
-      ? `/api/invoices/${editingInvoiceId}`
+    const url = internalEditingId
+      ? `/api/invoices/${internalEditingId}`
       : "/api/invoices";
-    const method = editingInvoiceId ? "PUT" : "POST";
+    const method = internalEditingId ? "PUT" : "POST";
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
@@ -174,7 +182,7 @@ export default function InvoiceBuilder({
   };
 
   const handleSucces = () => {
-    setEditingInvoiceId(null);
+    setInternalEditingId(null);
     setPreFilledItems([]);
     onClose();
   };
@@ -182,6 +190,7 @@ export default function InvoiceBuilder({
   const handleReset = () => {
     setClientId("");
     setPreFilledItems([]);
+    setInternalEditingId(null);
     setSelectedWorklogIds([]);
     setDiscountType("PERCENT");
     setDiscountValue("");
