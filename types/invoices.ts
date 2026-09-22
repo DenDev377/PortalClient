@@ -69,6 +69,7 @@ export interface InvoiceLineItem {
 export type DiscountType = "PERCENT" | "NOMINAL";
 
 export interface InvoiceBuilderPayload {
+  invoiceId?: string;
   clientId: string;
   clientName: string;
   lineItems: InvoiceLineItem[];

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   X,
   Briefcase,
@@ -16,6 +16,7 @@ import type {
   ClientOption,
   DiscountType,
   InvoiceBuilderPayload,
+  InvoiceDetail,
   InvoiceLineItem,
 } from "@/types/invoices";
 import type { WorklogData } from "@/types/worklog";
@@ -106,11 +107,47 @@ export default function InvoiceBuilder({
   onPublishAndSend,
 }: InvoiceBuilderProps) {
   const [clientId, setClientId] = useState("");
+  const [preFilledItems, setPreFilledItems] = useState<InvoiceLineItem[]>([]);
   const [selectedWorklogIds, setSelectedWorklogIds] = useState<string[]>([]);
   const [discountType, setDiscountType] = useState<DiscountType>("PERCENT");
   const [discountValue, setDiscountValue] = useState("");
   const [taxPercent, setTaxPercent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (editingInvoiceId) {
+      setLoading(true);
+      fetch(`/api/invoices/${editingInvoiceId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setClientId(data.client.id);
+          setTaxPercent(data.taxRate);
+          // pre-fill lineItems
+          const items: InvoiceLineItem[] = data.items.map(
+            (item: {
+              description: string;
+              quantity: string;
+              unitPrice: string;
+              total: string;
+            }) => ({
+              worklogId: "",
+              description: item.description,
+              hours: Number(item.quantity),
+              rate: item.unitPrice,
+              subtotal: item.total,
+            }),
+          );
+          setPreFilledItems(items);
+          setLoading(false);
+        });
+    }
+  }, [editingInvoiceId]);
+  const preFillFromInvoice = (invoice: InvoiceDetail) => {
+    setEditingInvoiceId(invoice.id);
+    setClientId(invoice.client.id);
+  };
 
   const selectedClient = DUMMY_CLIENTS.find((c) => c.id === clientId);
 
@@ -123,7 +160,8 @@ export default function InvoiceBuilder({
     );
   }, [selectedClient]);
 
-const lineItems: InvoiceLineItem[] = useMemo(() => {
+  const lineItems: InvoiceLineItem[] = useMemo(() => {
+    if (preFilledItems.length > 0) return preFilledItems;
     return unbilledWorklogs
       .filter((w) => selectedWorklogIds.includes(w.id))
       .map((w) => ({
@@ -133,10 +171,13 @@ const lineItems: InvoiceLineItem[] = useMemo(() => {
         rate: w.hourlyRate,
         subtotal: String(w.durationHours * Number(w.hourlyRate)),
       }));
-  }, [unbilledWorklogs, selectedWorklogIds]);
+  }, [preFilledItems, unbilledWorklogs, selectedWorklogIds]);
 
   const calculations = useMemo(() => {
-    const subtotal = lineItems.reduce((sum, item) => sum + Number(item.subtotal), 0);
+    const subtotal = lineItems.reduce(
+      (sum, item) => sum + Number(item.subtotal),
+      0,
+    );
     const dValue = Number(discountValue) || 0;
     const discountAmount =
       discountType === "PERCENT" ? (subtotal * dValue) / 100 : dValue;
@@ -179,8 +220,28 @@ const lineItems: InvoiceLineItem[] = useMemo(() => {
     }
   };
 
+  const handleSubmit = async () => {
+    const payload = buildPayload("PUBLISH");
+    const url = editingInvoiceId
+      ? `/api/invoices/${editingInvoiceId}`
+      : "/api/invoices";
+    const method = editingInvoiceId ? "PUT" : "POST";
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, action: "PUBLISH" }),
+    });
+  };
+
+  const handleSucces = () => {
+    setEditingInvoiceId(null);
+    setPreFilledItems([]);
+    onClose();
+  };
+
   const handleReset = () => {
     setClientId("");
+    setPreFilledItems([]);
     setSelectedWorklogIds([]);
     setDiscountType("PERCENT");
     setDiscountValue("");
