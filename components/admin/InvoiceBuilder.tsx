@@ -13,85 +13,13 @@ import {
   Lock,
 } from "lucide-react";
 import type {
-  ClientOption,
   DiscountType,
   InvoiceBuilderPayload,
   InvoiceDetail,
   InvoiceLineItem,
 } from "@/types/invoices";
 import type { WorklogData } from "@/types/worklog";
-
-const DUMMY_CLIENTS: ClientOption[] = [
-  { id: "c1", companyName: "PT Maju Jaya", email: "billing@majujaya.com" },
-  {
-    id: "c2",
-    companyName: "CV Kreatif Abadi",
-    email: "finance@kreatifabadi.com",
-  },
-  {
-    id: "c3",
-    companyName: "PT Teknologi Nusantara",
-    email: "ap@teknusantara.com",
-  },
-  {
-    id: "c4",
-    companyName: "Toko Modern Sentosa",
-    email: "admin@modernsentosa.com",
-  },
-];
-
-const DUMMY_WORKLOGS: WorklogData[] = [
-  {
-    id: "wl-001",
-    projectId: "1",
-    projectName: "Website Redesign",
-    clientName: "PT Maju Jaya",
-    taskDescription: "Fixing Bug Auth & Slices UI untuk halaman dashboard",
-    durationHours: 3.5,
-    hourlyRate: "200000",
-    logDate: "2026-09-10",
-    teamMember: "Andi Pratama",
-    billingStatus: "UNBILLED",
-  },
-  {
-    id: "wl-004",
-    projectId: "1",
-    projectName: "Website Redesign",
-    clientName: "PT Maju Jaya",
-    taskDescription: "Slicing ulang komponen Navbar dan Sidebar responsif",
-    durationHours: 4,
-    hourlyRate: "200000",
-    logDate: "2026-09-12",
-    teamMember: "Andi Pratama",
-    billingStatus: "UNBILLED",
-  },
-  {
-    id: "wl-003",
-    projectId: "3",
-    projectName: "E-commerce Platform",
-    clientName: "PT Teknologi Nusantara",
-    taskDescription:
-      "Optimasi query database untuk halaman produk, indexing, dan caching Redis",
-    durationHours: 2.5,
-    hourlyRate: "300000",
-    logDate: "2026-09-11",
-    teamMember: "Budi Santoso",
-    billingStatus: "UNBILLED",
-  },
-  {
-    id: "wl-006",
-    projectId: "3",
-    projectName: "E-commerce Platform",
-    clientName: "PT Teknologi Nusantara",
-    taskDescription:
-      "Review PR tim frontend, diskusi arsitektur state management Zustand",
-    durationHours: 2,
-    hourlyRate: "300000",
-    logDate: "2026-09-13",
-    teamMember: "Budi Santoso",
-    billingStatus: "UNBILLED",
-  },
-];
+import type { ClientData } from "./ClientDataTable";
 
 interface InvoiceBuilderProps {
   isOpen: boolean;
@@ -114,6 +42,8 @@ export default function InvoiceBuilder({
   const [taxPercent, setTaxPercent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
+  const [worklogs, setWorklogs] = useState<WorklogData[]>([]);
+  const [clients, setClients] = useState<ClientData[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -149,16 +79,26 @@ export default function InvoiceBuilder({
     setClientId(invoice.client.id);
   };
 
-  const selectedClient = DUMMY_CLIENTS.find((c) => c.id === clientId);
+  useEffect(() => {
+    fetch("/api/clients")
+      .then((res) => res.json())
+      .then((json) => setClients(json.data ?? []));
+  }, []);
+
+  const selectedClient = clients.find((c) => c.id === clientId) ?? null;
+
+  useEffect(() => {
+    if (selectedClient) {
+      fetch(`/api/worklogs?isBilled=false`)
+        .then((res) => res.json())
+        .then((json) => setWorklogs(json.data));
+    }
+  }, [selectedClient]);
 
   const unbilledWorklogs = useMemo(() => {
     if (!selectedClient) return [];
-    return DUMMY_WORKLOGS.filter(
-      (w) =>
-        w.clientName === selectedClient.companyName &&
-        w.billingStatus === "UNBILLED",
-    );
-  }, [selectedClient]);
+    return worklogs.filter((w) => w.clientName === selectedClient.id);
+  }, [selectedClient, worklogs]);
 
   const lineItems: InvoiceLineItem[] = useMemo(() => {
     if (preFilledItems.length > 0) return preFilledItems;
@@ -355,7 +295,7 @@ export default function InvoiceBuilder({
               <option value="" disabled>
                 -- Pilih Klien --
               </option>
-              {DUMMY_CLIENTS.map((client) => (
+              {clients.map((client) => (
                 <option key={client.id} value={client.id}>
                   {client.companyName} — {client.email}
                 </option>
