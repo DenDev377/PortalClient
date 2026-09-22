@@ -43,7 +43,9 @@ export default function InvoiceBuilder({
   const [discountValue, setDiscountValue] = useState("");
   const [taxPercent, setTaxPercent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [internalEditingId, setInternalEditingId] = useState<string | null>(null);
+  const [internalEditingId, setInternalEditingId] = useState<string | null>(
+    null,
+  );
   const [worklogs, setWorklogs] = useState<WorklogData[]>([]);
   const [clients, setClients] = useState<ClientData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -90,7 +92,9 @@ export default function InvoiceBuilder({
   useEffect(() => {
     fetch("/api/clients")
       .then((res) => res.json())
-      .then((json) => setClients(json.data ?? []));
+      .then((json) =>
+        setClients(Array.isArray(json) ? json : (json.data ?? [])),
+      );
   }, []);
 
   const selectedClient = clients.find((c) => c.id === clientId) ?? null;
@@ -105,7 +109,7 @@ export default function InvoiceBuilder({
 
   const unbilledWorklogs = useMemo(() => {
     if (!selectedClient) return [];
-    return worklogs.filter((w) => w.clientName === selectedClient.id);
+    return worklogs.filter((w) => w.clientName === selectedClient.companyName);
   }, [selectedClient, worklogs]);
 
   const lineItems: InvoiceLineItem[] = useMemo(() => {
