@@ -16,18 +16,19 @@ export default function DashboardPage() {
     <div className="flex flex-col max-w-full w-full mx-auto p-6">
       <div className="mb-4">
         <h1 className="text-2xl font-bold text-slate-900">
-          Dashboard Overview
+          Ikhtisar Dasbor
         </h1>
         <p className="text-slate-500 mt-1">
-          Welcome back, here's what's happening with your clients today.
+          Selamat datang, inilah yang terjadi dengan klien Anda
+          hari ini.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Card 1: Total Revenue */}
+        {/* Card 1: Total Pendapatan */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">
-              Total Revenue
+              Total Pendapatan
             </h3>
             <div className="p-2.5 bg-amber-50 text-amber-500 rounded-lg group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-200">
               <CircleDollarSign className="w-5 h-5" />
@@ -50,11 +51,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Card 2: Unpaid Invoice */}
+        {/* Card 2: Tagihan Belum Dibayar */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">
-              Unpaid Invoices
+              Tagihan Belum Dibayar
             </h3>
             <div className="p-2.5 bg-rose-50 text-rose-600 rounded-lg group-hover:scale-110 group-hover:bg-rose-100 transition-all duration-200">
               <AlertCircle className="w-5 h-5" />
@@ -66,7 +67,7 @@ export default function DashboardPage() {
                 3
               </p>
               <span className="text-base font-semibold text-slate-600">
-                Pending
+                Menunggu
               </span>
             </div>
             <div className="flex items-center gap-1 mt-2 text-sm">
@@ -77,11 +78,11 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        {/* Card 3: Unbilled Worklog Hours */}
+        {/* Card 3: Jam Worklog Belum Ditagih */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">
-              Unbilled Worklog Hours
+              Jam Worklog Belum Ditagih
             </h3>
             <div className="p-2.5 bg-blue-50 text-blue-500 rounded-lg group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-200">
               <Clock className="w-5 h-5" />
@@ -94,7 +95,7 @@ export default function DashboardPage() {
                 12.5
               </p>
               <span className="text-base font-semibold text-slate-600">
-                Hours
+                Jam
               </span>
             </div>
             <div className="flex items-center gap-1 mt-2 text-sm">
@@ -105,11 +106,11 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        {/* Card 4: Active Client */}
+        {/* Card 4: Klien Aktif */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">
-              Active Client
+              Klien Aktif
             </h3>
             <div className="p-2.5 bg-green-50 text-green-600 rounded-lg group-hover:scale-110 group-hover:bg-green-100 transition-all duration-200">
               <Users className="w-5 h-5" />
@@ -121,7 +122,7 @@ export default function DashboardPage() {
                 3
               </p>
               <span className="text-base font-semibold text-slate-600">
-                Client
+                Klien
               </span>
             </div>
             <div className="flex items-center gap-1 mt-2 text-sm">

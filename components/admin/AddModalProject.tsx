@@ -137,7 +137,7 @@ export default function AddModalProject({
         </button>
 
         <h2 className="text-xl font-bold text-slate-900 mb-1">
-          {isEditMode ? "Edit Project" : "Tambah Project Baru"}
+          {isEditMode ? "Edit Proyek" : "Tambah Proyek Baru"}
         </h2>
         <p className="text-sm text-slate-500 mb-6">
           {isEditMode ? "Perbarui informasi project." : "Isi detail project baru untuk klien."}
@@ -153,7 +153,7 @@ export default function AddModalProject({
           {/* Nama Project */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Nama Project <span className="text-red-500">*</span>
+              Nama Proyek <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -166,10 +166,10 @@ export default function AddModalProject({
             />
           </div>
 
-          {/* Pilih Client */}
+          {/* Pilih Klien */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Client <span className="text-red-500">*</span>
+              Klien <span className="text-red-500">*</span>
             </label>
             <select
               name="clientId"
@@ -178,7 +178,7 @@ export default function AddModalProject({
               onChange={handleChange}
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent bg-white"
             >
-              <option value="" disabled>-- Pilih Client --</option>
+              <option value="" disabled>-- Pilih Klien --</option>
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
@@ -252,9 +252,9 @@ export default function AddModalProject({
                 onChange={handleChange}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent bg-white"
               >
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="COMPLETED">Completed</option>
-                <option value="CANCELLED">Cancelled</option>
+                <option value="IN_PROGRESS">Dalam Proses</option>
+                <option value="COMPLETED">Selesai</option>
+                <option value="CANCELLED">Dibatalkan</option>
               </select>
             </div>
           )}
@@ -274,7 +274,7 @@ export default function AddModalProject({
               disabled={isLoading}
               className="flex-1 bg-[#E15A3E] text-white rounded-lg py-2.5 text-sm font-medium hover:bg-[#C14A2F] transition-colors disabled:opacity-50"
             >
-              {isLoading ? "Menyimpan..." : isEditMode ? "Simpan Perubahan" : "Tambah Project"}
+              {isLoading ? "Menyimpan..." : isEditMode ? "Simpan Perubahan" : "Tambah Proyek"}
             </button>
           </div>
         </form>

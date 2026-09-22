@@ -1,1 +1,1 @@
-export default function PortalInvoices() { return <div>Portal Invoices</div>; }
+export default function PortalInvoices() { return <div>Tagihan Portal</div>; }

@@ -112,10 +112,9 @@ export default function Invoices() {
   return (
     <div className="flex flex-col max-w-full w-full mx-auto p-6 justify-between">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-slate-900">Invoices Overview</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Ikhtisar Tagihan</h1>
         <p className="text-slate-500 mt-1">
-          Welcome back, here&apos;s what&apos;s happening with your invoices
-          today.
+          Selamat datang, inilah yang terjadi dengan tagihan Anda hari ini.
         </p>
       </div>
 
@@ -144,7 +143,7 @@ export default function Invoices() {
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-all duration-200 p-6 cursor-default group">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">
-              Paid Invoices
+              Tagihan Dibayar
             </h3>
             <div className="p-2.5 bg-emerald-50 text-emerald-400 rounded-lg group-hover:scale-110 group-hover:bg-emerald-100 transition-all duration-200">
               <CheckCircle2 className="w-5 h-5" />
@@ -166,7 +165,7 @@ export default function Invoices() {
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-all duration-200 p-6 cursor-default group">
           <div className="flex justify-between items-start">
             <h3 className="text-sm font-semibold text-slate-500">
-              Awaiting Payment
+              Menunggu Pembayaran
             </h3>
             <div className="p-2.5 bg-amber-50 text-amber-400 rounded-lg group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-200">
               <Clock className="w-5 h-5" />
@@ -187,7 +186,9 @@ export default function Invoices() {
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-all duration-200 p-6 cursor-default group">
           <div className="flex justify-between items-start">
-            <h3 className="text-sm font-semibold text-slate-500">Overdue</h3>
+            <h3 className="text-sm font-semibold text-slate-500">
+              Jatuh Tempo
+            </h3>
             <div className="p-2.5 bg-rose-50 text-rose-400 rounded-lg group-hover:scale-110 group-hover:bg-rose-100 transition-all duration-200">
               <AlertCircle className="w-5 h-5" />
             </div>
@@ -212,7 +213,7 @@ export default function Invoices() {
           <div className="flex items-center gap-2">
             <input
               type="text"
-              placeholder="Search invoices..."
+              placeholder="Cari tagihan..."
               className="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#E15A3E] focus:border-transparent"
             />
           </div>
@@ -221,7 +222,7 @@ export default function Invoices() {
               onClick={() => setBuilderOpen(true)}
               className="bg-[#E15A3E] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#C14A2F] transition-all duration-200 shadow-sm"
             >
-              Create Invoice
+              Buat Invoice
             </button>
           </div>
         </div>

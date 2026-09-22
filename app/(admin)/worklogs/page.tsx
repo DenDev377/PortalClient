@@ -171,42 +171,43 @@ const options: ProjectOption[] = (json ?? []).map((p: {
 
   const stats = [
     {
-      label: "Total Hours",
+      label: "Total Jam",
       value: totalHours.toFixed(1),
       icon: <Clock className="w-5 h-5" />,
       color: "indigo",
-      desc: "Total logged hours (current filter)",
+      desc: "Total jam yang dicatat (filter saat ini)",
     },
     {
-      label: "Unbilled Value",
+      label: "Nilai Belum Ditagih",
       value: formatIDR(unbilledValue),
       icon: <Timer className="w-5 h-5" />,
       color: "emerald",
-      desc: "Estimated value of unbilled hours",
+      desc: "Estimasi nilai jam yang belum ditagih",
     },
     {
-      label: "Unbilled Hours",
+      label: "Jam Belum Ditagih",
       value: unbilledHours.toFixed(1),
       icon: <Coins className="w-5 h-5" />,
       color: "amber",
-      desc: "Accumulated unbilled worklog hours",
+      desc: "Total jam worklog yang belum ditagih",
     },
     {
-      label: "Billed Hours",
+      label: "Jam Sudah Ditagih",
       value: billedHours.toFixed(1),
       icon: <FileCheck className="w-5 h-5" />,
       color: "red",
-      desc: "Hours that have been billed",
+      desc: "Jam yang sudah ditagih",
     },
   ];
 
   return (
     <div className="max-w-full w-full flex flex-col justify-between p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-slate-900"> Worklogs Overview</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Ikhtisar Worklog</h1>
         <p className="text-slate-500 mt-1">
           {" "}
-          Welcome back, here&apos;s what&apos;s happening with your worklogs today.
+          Welcome back, ini ringkasan worklog Anda
+          hari ini.
         </p>
       </div>
 
@@ -269,7 +270,7 @@ const options: ProjectOption[] = (json ?? []).map((p: {
               onClick={handleConvertToInvoice}
               className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
             >
-              <FileText className="w-4 h-4" /> Convert to Invoice
+              <FileText className="w-4 h-4" /> Konversi ke Invoice
             </button>
           </div>
         )}

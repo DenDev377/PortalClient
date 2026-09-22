@@ -112,7 +112,7 @@ export default function AddModalClient({
           </button>
 
           <h2 className="text-xl font-bold text-slate-900 mb-1">
-            {isEditMode ? "Edit Data Client" : "Tambah Client Baru"}
+            {isEditMode ? "Edit Data Klien" : "Tambah Klien Baru"}
           </h2>
           <p className="text-sm text-slate-500">
             {isEditMode
@@ -214,7 +214,7 @@ export default function AddModalClient({
                 ? "Menyimpan..."
                 : isEditMode
                 ? "Simpan Perubahan"
-                : "Tambah Client"}
+                : "Tambah Klien"}
             </button>
           </div>
         </div>

@@ -111,7 +111,7 @@ export default function EditWorklogModal({
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-xl font-bold text-slate-900 mb-1">Edit Worklog</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-1">Edit Catatan Jam</h2>
         <p className="text-sm text-slate-500 mb-6">
           ID: {worklog.id} — {worklog.teamMember}
         </p>

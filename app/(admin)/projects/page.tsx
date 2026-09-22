@@ -89,7 +89,7 @@ export default function ProjectsPage() {
   return (
     <div className="max-w-full w-full mx-auto flex flex-col p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-slate-900">Projects Overview</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Ikhtisar Proyek</h1>
         <p className="text-slate-500 mt-1">
           Kelola semua proyek berdasarkan klien, tipe billing, dan statusnya.
         </p>
@@ -98,10 +98,10 @@ export default function ProjectsPage() {
       {/* ── Summary Cards ─────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Total Project", value: totalProjects, icon: <FolderKanban className="w-5 h-5" />, color: "indigo" },
+          { label: "Total Proyek", value: totalProjects, icon: <FolderKanban className="w-5 h-5" />, color: "indigo" },
           { label: "Sedang Berjalan", value: activeProjects, icon: <Activity className="w-5 h-5" />, color: "emerald" },
-          { label: "Fixed Price", value: fixedProjects, icon: <Briefcase className="w-5 h-5" />, color: "amber" },
-          { label: "Hourly Rate", value: hourlyProjects, icon: <Clock className="w-5 h-5" />, color: "red" },
+          { label: "Harga Tetap", value: fixedProjects, icon: <Briefcase className="w-5 h-5" />, color: "amber" },
+          { label: "Tarif Per Jam", value: hourlyProjects, icon: <Clock className="w-5 h-5" />, color: "red" },
         ].map((card) => (
           <div
             key={card.label}

@@ -68,11 +68,11 @@ export default function FinancialOverview() {
   };
   const series = [
     {
-      name: "Paid",
+      name: "Dibayar",
       data: dataChart.paid,
     },
     {
-      name: "Unpaid",
+      name: "Belum Dibayar",
       data: dataChart.unpaid,
     },
   ];
@@ -81,10 +81,10 @@ export default function FinancialOverview() {
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-4">
         <h2 className="text-base font-semibold text-slate-900">
-          Financial Overview
+          Ringkasan Keuangan
         </h2>
         <p className="mt-1 text-sm text-slate-500">
-          Paid revenue vs pending invoices
+          Pendapatan yang sudah dibayar vs tagihan menunggu
         </p>
       </div>
       <Charts options={options} series={series} type="area" height={300} />

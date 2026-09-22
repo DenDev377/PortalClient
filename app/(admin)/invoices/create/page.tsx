@@ -1,1 +1,1 @@
-export default function CreateInvoice() { return <div>Create Invoice</div>; }
+export default function CreateInvoice() { return <div>Buat Invoice</div>; }

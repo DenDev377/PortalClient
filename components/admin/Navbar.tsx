@@ -11,24 +11,24 @@ export default function NavbarPage() {
 
   const configPage: Record<string, { title: string; subtitle: string }> = {
     "/overview": {
-      title: "Dashboard",
+      title: "Dasbor",
       subtitle: "Selamat datang kembali! Ini ringkasan hari ini.",
     },
     "/clients": {
-      title: "Clients",
-      subtitle: "Selamat datang pada halaman client",
+      title: "Klien",
+      subtitle: "Selamat datang pada halaman klien",
     },
     "/projects": {
-      title: "Project",
-      subtitle: "Selamat datang pada halaman project",
+      title: "Proyek",
+      subtitle: "Selamat datang pada halaman proyek",
     },
     "/worklogs": {
-      title: "worklogs",
-      subtitle: "Selamat datang pada halaman worklogs",
+      title: "Worklog",
+      subtitle: "Selamat datang pada halaman worklog",
     },
     "/invoices": {
-      title: "invoices",
-      subtitle: "Selamat datang pada halaman invoices",
+      title: "Tagihan",
+      subtitle: "Selamat datang pada halaman tagihan",
     },
   };
 

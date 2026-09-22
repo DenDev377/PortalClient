@@ -107,7 +107,7 @@ const ClientPage = () => {
   return (
     <div className="flex flex-col max-w-full w-full mx-auto p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-slate-900">Client Overview</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Ikhtisar Klien</h1>
         <p className="text-slate-500 mt-1">
           Kelola semua perusahaan klien, proyek, dan status tagihannya.
         </p>
@@ -118,7 +118,7 @@ const ClientPage = () => {
         {/* Total Client */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-all duration-200 p-6 cursor-default group">
           <div className="flex justify-between items-start">
-            <h3 className="text-sm font-semibold text-slate-500">Total Client</h3>
+            <h3 className="text-sm font-semibold text-slate-500">Total Klien</h3>
             <div className="p-2.5 bg-amber-50 text-amber-500 rounded-lg group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-200">
               <Users className="w-5 h-5" />
             </div>
@@ -134,7 +134,7 @@ const ClientPage = () => {
         {/* Active Clients */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
           <div className="flex justify-between items-start">
-            <h3 className="text-sm font-semibold text-slate-500">Clients Aktif</h3>
+            <h3 className="text-sm font-semibold text-slate-500">Klien Aktif</h3>
             <div className="p-2.5 bg-green-100 text-green-500 rounded-lg group-hover:scale-110 group-hover:bg-green-200 transition-all duration-200">
               <UsersRound className="w-5 h-5" />
             </div>
@@ -147,10 +147,10 @@ const ClientPage = () => {
           </div>
         </div>
 
-        {/* Overdue */}
+        {/* Tagihan Jatuh Tempo */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 cursor-default group">
           <div className="flex justify-between items-start">
-            <h3 className="text-sm font-semibold text-slate-500">Tagihan Overdue</h3>
+            <h3 className="text-sm font-semibold text-slate-500">Tagihan Jatuh Tempo</h3>
             <div className="p-2.5 bg-red-50 text-red-500 rounded-lg group-hover:scale-110 group-hover:bg-red-100 transition-all duration-200">
               <AlertCircle className="w-5 h-5" />
             </div>

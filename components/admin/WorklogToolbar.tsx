@@ -99,7 +99,7 @@ export default function WorklogToolbar({
             >
               <option value="THIS_WEEK">Minggu Ini</option>
               <option value="THIS_MONTH">Bulan Ini</option>
-              <option value="CUSTOM">Custom Date</option>
+              <option value="CUSTOM">Tanggal Custom</option>
             </select>
             <div className="absolute right-3 pointer-events-none text-slate-400">
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">

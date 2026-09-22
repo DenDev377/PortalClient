@@ -268,7 +268,7 @@ export default function InvoiceBuilder({
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 leading-tight">
-                Invoice Builder
+                Pembangun Invoice
               </h2>
               <p className="text-xs text-slate-500">
                 Buat invoice dari worklog belum ditagih
@@ -327,7 +327,7 @@ export default function InvoiceBuilder({
             )}
           </div>
 
-          {/* Section 2: Auto-Import Unbilled Worklogs */}
+          {/* Bagian 2: Impor Otomatis Worklog Belum Ditagih */}
           {selectedClient && (
             <div className="border-b border-slate-100 pb-6">
               <div className="flex items-center justify-between mb-4">
@@ -410,7 +410,7 @@ export default function InvoiceBuilder({
             </div>
           )}
 
-          {/* Section 3: Line Items Preview */}
+          {/* Bagian 3: Pratinjau Item Invoice */}
           {lineItems.length > 0 && (
             <div className="border-b border-slate-100 pb-6">
               <div className="flex items-center gap-2 mb-4">
@@ -418,7 +418,7 @@ export default function InvoiceBuilder({
                   3
                 </span>
                 <h3 className="text-sm font-semibold text-slate-900">
-                  Line Items Invoice
+                  Item Invoice
                 </h3>
               </div>
               <div className="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
@@ -520,7 +520,7 @@ export default function InvoiceBuilder({
             </div>
           )}
 
-          {/* Section 5: Summary */}
+          {/* Bagian 5: Ringkasan */}
           {lineItems.length > 0 && (
             <div className="pb-2">
               <div className="flex items-center gap-2 mb-4">
@@ -558,7 +558,7 @@ export default function InvoiceBuilder({
                   </span>
                 </div>
                 <div className="border-t border-slate-200 pt-3 mt-1 flex justify-between items-center">
-                  <span className="font-bold text-slate-900">Grand Total</span>
+                  <span className="font-bold text-slate-900">Total Keseluruhan</span>
                   <span className="text-xl font-bold text-[#E15A3E]">
                     {formatIDR(calculations.grandTotal)}
                   </span>

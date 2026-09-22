@@ -67,25 +67,25 @@ export default function TableProjects({
       case "ACTIVE":
         return (
           <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 border border-green-200">
-            <CheckCircle2 className="h-3 w-3" /> Active
+            <CheckCircle2 className="h-3 w-3" /> Aktif
           </span>
         );
       case "ON_HOLD":
         return (
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 border border-amber-200">
-            <Pause className="h-3 w-3" /> On Hold
+            <Pause className="h-3 w-3" /> Ditunda
           </span>
         );
       case "COMPLETED":
         return (
           <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 border border-slate-200">
-            <CheckCircle2 className="h-3 w-3" /> Completed
+            <CheckCircle2 className="h-3 w-3" /> Selesai
           </span>
         );
       case "CANCELLED":
         return (
           <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 border border-rose-200">
-            <XCircle className="h-3 w-3" /> Cancelled
+            <XCircle className="h-3 w-3" /> Dibatalkan
           </span>
         );
     }

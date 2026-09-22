@@ -73,7 +73,7 @@ export default function TableWorklogs({
           </span>
           {invoiceNumber && (
             <span className="text-xs text-slate-500">
-              Invoice: {invoiceNumber}
+              Tagihan: {invoiceNumber}
             </span>
           )}
         </div>

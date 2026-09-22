@@ -153,7 +153,7 @@ export const ClientDataTable: React.FC<ClientDataTableProps> = ({
                   )}
                   {client.billingStatus === "OVERDUE" && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 border border-rose-200">
-                      <AlertCircle className="h-3 w-3" /> Overdue
+                      <AlertCircle className="h-3 w-3" /> Jatuh Tempo
                     </span>
                   )}
                 </td>

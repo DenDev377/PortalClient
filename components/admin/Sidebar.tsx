@@ -19,37 +19,37 @@ export default function SidebarPage() {
 
   const menuItems = [
     {
-      name: "Overview",
+      name: "Beranda",
       href: "/overview",
       icon: <LayoutDashboard className="w-5 h-5" />,
     },
-    { name: "Clients", href: "/clients", icon: <Users className="w-5 h-5" /> },
+    { name: "Klien", href: "/clients", icon: <Users className="w-5 h-5" /> },
     {
-      name: "Project",
+      name: "Proyek",
       href: "/projects",
       icon: <Briefcase className="w-5 h-5" />,
     },
     {
-      name: "Worklogs",
+      name: "Worklog",
       href: "/worklogs",
       icon: <Clock className="w-5 h-5" />,
     },
     {
-      name: "Invoices",
+      name: "Tagihan",
       href: "/invoices",
       icon: <Receipt className="w-5 h-5" />,
     },
   ];
   const menuItems2 = [
     {
-      name: "General",
-      href: "/general",
+      name: "Pengaturan",
+      href: "/settings",
       icon: <Settings className="w-5 h-5" />,
     },
     {
-      name: "Billing Rules",
+      name: "Aturan Penagihan",
       href: "/billing",
-      icon: <Settings2 className="w-5 h-5 " />,
+      icon: <Settings2 className="w-5 h-5" />,
     },
   ];
 
@@ -66,7 +66,7 @@ export default function SidebarPage() {
           P
         </div>
         <h1 className="text-2xl font-extrabold text-slate-800 leading-none tracking-tight">
-          ortal<span className="text-slate-400 font-semibold">Client</span>
+          ortal<span className="text-slate-400 font-semibold">Klien</span>
         </h1>
       </div>
 
@@ -100,7 +100,7 @@ export default function SidebarPage() {
 
       <div className="mb-6">
         <h2 className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
-          Settings & Governance
+          Pengaturan & Tata Kelola
         </h2>
         {menuItems2.map((items) => {
           const isActive = pathname === items.href;
@@ -130,7 +130,7 @@ export default function SidebarPage() {
           className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-[#FFF0ED] hover:text-[#E15A3E] transition-all duration-200"
         >
           <FileText className="w-5 h-5 text-slate-400" />
-          <span>Documentation</span>
+          <span>Dokumentasi</span>
         </Link>
 <button
             onClick={handleLogout}
