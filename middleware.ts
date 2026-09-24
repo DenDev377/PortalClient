@@ -12,7 +12,9 @@ export default withAuth(
       pathname.startsWith("/clients") ||
       pathname.startsWith("/projects") ||
       pathname.startsWith("/worklogs") ||
-      pathname.startsWith("/invoices");
+      pathname.startsWith("/invoices") ||
+      pathname.startsWith("/settings") ||
+      pathname.startsWith("/billing");
 
     if (isAdminRoute && role !== "ADMIN" && role !== "TEAM") {
       // Jika dia CLIENT, arahkan ke portalnya
@@ -53,6 +55,8 @@ export const config = {
     "/projects/:path*",
     "/worklogs/:path*",
     "/invoices/:path*",
+    "/settings/:path*",
+    "/billing/:path*",
     "/portal/:path*",
   ],
 };
