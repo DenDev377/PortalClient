@@ -46,16 +46,55 @@ export default function Invoices() {
   };
 
   const handlePreviewPdf = (invoiceId: string) => {
-    console.log("Preview PDF:", invoiceId);
+    // PDF Generation will use the browser print/PDF feature 
+    // You should create a page at /portal/invoices/[id]/print or similar
+    window.open(`/api/invoices/${invoiceId}`, '_blank');
+    alert(`Membuka raw data Invoice (ID: ${invoiceId}). Untuk versi PDF, silahkan buat komponen cetak HTML khusus dan panggil jsPDF/window.print() di sana.`);
   };
-  const handleSendPortalLink = (invoiceId: string) => {
-    console.log("Send portal link:", invoiceId);
+
+  const handleSendPortalLink = async (invoiceId: string) => {
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}/payment`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to generate link");
+      
+      alert(`Payment Link / Portal disiapkan: \n\n${data.redirect_url}`);
+      // Refresh context
+      fetchInvoices();
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : "Error generating payment link");
+    }
   };
-  const handleCheckInvoice = (invoiceId: string) => {
-    console.log("Mark paid:", invoiceId);
+
+  const handleCheckInvoice = async (invoiceId: string) => {
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}/sync`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to check invoice");
+      
+      alert(data.message);
+      fetchInvoices();
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : "Error syncing invoice");
+    }
   };
-  const handleDeleteInvoice = (invoiceId: string) => {
-    console.log("Delete invoice:", invoiceId);
+
+  const handleDeleteInvoice = async (invoiceId: string) => {
+    if (!confirm("Yakin ingin menghapus invoice ini?")) return;
+    
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Gagal menghapus invoice");
+      
+      alert("Invoice berhasil dihapus");
+      fetchInvoices();
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : "Error deleting invoice");
+    }
   };
 
   const handleSaveDraft = async (payload: InvoiceBuilderPayload) => {

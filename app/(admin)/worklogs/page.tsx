@@ -140,7 +140,8 @@ const options: ProjectOption[] = (json ?? []).map((p: {
   };
 
   const handleConvertToInvoice = () => {
-    console.log("Convert to invoice:", selectedIds);
+    alert("Untuk mengonversi worklog, silakan menuju tab Invoices, klik 'Buat Invoice', pilih Klien, dan centang worklog yang belum ditagih di form builder.");
+    window.location.href = "/invoices";
   };
 
   // ── Statistik dari data real ────────────────────────────────
