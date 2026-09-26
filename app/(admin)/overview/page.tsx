@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CircleDollarSign,
@@ -6,12 +9,42 @@ import {
   Clock,
   Users,
   Briefcase,
+  Loader2,
 } from "lucide-react";
 import FinancialOverview from "@/components/admin/FInancialOverview";
 import TableOverview from "@/components/admin/TableOverview";
 import QuickActionWidget from "@/components/admin/QuickActionWidget";
 import DueInvoicesWidget from "@/components/admin/DueInvoicesWidget";
+
 export default function DashboardPage() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/overview")
+      .then((res) => res.json())
+      .then((json) => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  const formatIDR = (val: number) => {
+    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(val);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-24 text-slate-400 gap-3">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="text-sm font-medium">Memuat Dashboard...</span>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col max-w-full w-full mx-auto p-6">
       <div className="mb-4">
@@ -36,9 +69,8 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <div className="flex items-baseline gap-1">
-              <span className="text-xl font-bold text-slate-700">Rp</span>
-              <p className="text-3xl font-bold tracking-tight text-slate-900">
-                24.580.000
+              <p className="text-3xl font-bold tracking-tight text-slate-900 truncate">
+                {data ? formatIDR(data.totalRevenue) : "Rp 0"}
               </p>
             </div>
             <div className="flex items-center gap-1 mt-2 text-sm">
@@ -64,10 +96,10 @@ export default function DashboardPage() {
           <div className="mt-4">
             <div className="flex items-baseline gap-2">
               <p className="text-3xl font-bold tracking-tight text-slate-900">
-                3
+                {data ? data.unpaidCount : 0}
               </p>
               <span className="text-base font-semibold text-slate-600">
-                Menunggu
+                Tagihan
               </span>
             </div>
             <div className="flex items-center gap-1 mt-2 text-sm">
@@ -92,7 +124,7 @@ export default function DashboardPage() {
           <div className="mt-4">
             <div className="flex items-baseline gap-2">
               <p className="text-3xl font-bold tracking-tight text-slate-900">
-                12.5
+                {data ? data.unbilledHours : 0}
               </p>
               <span className="text-base font-semibold text-slate-600">
                 Jam
@@ -119,7 +151,7 @@ export default function DashboardPage() {
           <div className="mt-4">
             <div className="flex items-baseline gap-2">
               <p className="text-3xl font-bold tracking-tight text-slate-900">
-                3
+                {data ? data.activeClients : 0}
               </p>
               <span className="text-base font-semibold text-slate-600">
                 Klien
@@ -135,14 +167,14 @@ export default function DashboardPage() {
         </div>
       </div>
       <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <FinancialOverview />
-        <TableOverview />
+        <FinancialOverview chartData={data?.chartData} />
+        <TableOverview recentInvoices={data?.recentInvoices} />
       </div>
 
       {/* widget */}
       <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <QuickActionWidget />
-        <DueInvoicesWidget />
+        <DueInvoicesWidget dueInvoices={data?.dueInvoices} />
       </div>
     </div>
   );

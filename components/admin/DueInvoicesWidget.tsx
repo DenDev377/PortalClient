@@ -1,46 +1,8 @@
 "use client";
 import { CalendarClock, Mail, AlertTriangle } from "lucide-react";
 
-// Mock Data (biasanya dari API)
-const mockInvoices = [
-  {
-    id: 1,
-    client: "PT Maju Jaya",
-    invoiceNo: "INV-2026-001",
-    dueDate: "2026-09-12", // 3 hari lagi
-    amount: 8_500_000,
-  },
-  {
-    id: 2,
-    client: "CV Kreatif Abadi",
-    invoiceNo: "INV-2026-003",
-    dueDate: "2026-09-10", // 1 hari lagi
-    amount: 4_200_000,
-  },
-  {
-    id: 3,
-    client: "Toko Modern Sentosa",
-    invoiceNo: "INV-2026-007",
-    dueDate: "2026-09-15", // 6 hari lagi
-    amount: 12_000_000,
-  },
-  {
-    id: 4,
-    client: "Startup Inovasi Tech",
-    invoiceNo: "INV-2026-009",
-    dueDate: "2026-09-16", // 7 hari lagi
-    amount: 2_750_000,
-  },
-  {
-    id: 5,
-    client: "PT Solusi Digital",
-    invoiceNo: "INV-2026-010",
-    dueDate: "2026-09-08", // Hari ini (sangat urgent)
-    amount: 6_300_000,
-  },
-];
-
-export default function DueInvoicesWidget() {
+export default function DueInvoicesWidget({ dueInvoices }: { dueInvoices?: any[] }) {
+  const invoices = dueInvoices || [];
   const handleSendReminder = (invoiceNo: string) => {
     console.log(`Kirim reminder email untuk invoice ${invoiceNo}`);
     // TODO: Integrasi dengan email service
@@ -65,12 +27,12 @@ export default function DueInvoicesWidget() {
           Tagihan Jatuh Tempo
         </h3>
         <span className="text-xs bg-rose-50 text-rose-600 px-2 py-1 rounded-full font-medium">
-          {mockInvoices.length} perlu perhatian
+          {invoices.length} perlu perhatian
         </span>
       </div>
 
       <div className="flex-1 space-y-3 overflow-y-auto max-h-80 pr-1">
-        {mockInvoices.map((inv) => {
+        {invoices.map((inv) => {
           const daysLeft = getDaysUntil(inv.dueDate);
           let urgency: "overdue" | "urgent" | "normal" = "normal";
           if (daysLeft <= 0) urgency = "overdue";

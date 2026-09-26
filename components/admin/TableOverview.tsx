@@ -1,29 +1,7 @@
 "use client";
 
-export default function TableOverview() {
-  const data = [
-    {
-      invoiceNumber: "INV-001",
-      clientName: "John Doe",
-      status: "Dibayar",
-      date: "2023-08-01",
-      amount: 50000,
-    },
-    {
-      invoiceNumber: "INV-002",
-      clientName: "JohnYY Doe",
-      status: "Menunggu",
-      date: "2023-08-01",
-      amount: 5000000,
-    },
-    {
-      invoiceNumber: "INV-003",
-      clientName: "JohnZZ Doe",
-      status: "Jatuh Tempo",
-      date: "2023-08-01",
-      amount: 50000000,
-    },
-  ];
+export default function TableOverview({ recentInvoices }: { recentInvoices?: any[] }) {
+  const data = recentInvoices || [];
   const renderBadge = (status: string) => {
     if (status === "Dibayar") {
       return (

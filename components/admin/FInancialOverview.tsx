@@ -6,30 +6,13 @@ const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export default function FinancialOverview() {
+export default function FinancialOverview({ chartData }: { chartData?: { paid: number[], unpaid: number[] } }) {
   const dataChart = {
     categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ],
-    paid: [
-      12000000, 15000000, 18000000, 20000000, 22000000, 25000000, 27000000,
-      30000000, 32000000, 35000000, 37000000, 40000000,
-    ],
-    unpaid: [
-      2000000, 3000000, 4000000, 5000000, 6000000, 7000000, 8000000, 9000000,
-      10000000, 11000000, 12000000, 13000000,
-    ],
+    paid: chartData?.paid || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    unpaid: chartData?.unpaid || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   };
   const options: ApexCharts.ApexOptions = {
     chart: {
