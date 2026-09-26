@@ -1,24 +1,26 @@
 "use client";
 
+import Link from "next/link";
+
 export default function TableOverview({ recentInvoices }: { recentInvoices?: any[] }) {
   const data = recentInvoices || [];
   const renderBadge = (status: string) => {
-    if (status === "Dibayar") {
+    if (status === "PAID") {
       return (
         <span className="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
-          {status}
+          Dibayar
         </span>
       );
-    } else if (status === "Menunggu") {
-      return (
-        <span className="bg-rose-100 text-rose-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-rose-200 dark:text-rose-900">
-          {status}
-        </span>
-      );
-    } else if (status === "Jatuh Tempo") {
+    } else if (status === "PENDING" || status === "UNPAID") {
       return (
         <span className="bg-amber-100 text-amber-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-amber-200 dark:text-amber-900">
-          {status}
+          Menunggu
+        </span>
+      );
+    } else if (status === "OVERDUE") {
+      return (
+        <span className="bg-rose-100 text-rose-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-rose-200 dark:text-rose-900">
+          Jatuh Tempo
         </span>
       );
     } else {
@@ -35,12 +37,12 @@ export default function TableOverview({ recentInvoices }: { recentInvoices?: any
       <div className=" grid grid-cols-3 lg:grid-cols-1 gap-6">
         <div className="px-6 py-2 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-800">Total Pendapatan</h2>
-          <a
-            href="#"
+          <Link
+            href="/invoices"
             className="text-slate-50 bg-blue-500 px-4 py-2 rounded-md hover:text-slate-200 hover:bg-blue-600 transition-all duration-200 text-sm"
           >
             Lihat Semua
-          </a>
+          </Link>
         </div>
 
         <div className="overflow-x-auto">
