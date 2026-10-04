@@ -92,5 +92,5 @@ Untuk memvalidasi bahwa seluruh pergerakan bisnis *(Business Flow)* beroperasi m
 ---
 
 ### Dikembangkan Oleh
-**Reptara Agency** © 2026. Hak Cipta Dilindungi.  
-*Sistem Arsitektur dibangun bekerjasama dengan kecerdasan simulasi AntiGravity Code Agent.*
+**Dendi Dev** © 2026. Hak Cipta Dilindungi.  
+
