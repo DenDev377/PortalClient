@@ -165,8 +165,8 @@ export default function PortalDashboard() {
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow group cursor-default">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Proyek Aktif</span>
-            <div className="p-2 bg-blue-50 rounded-lg group-hover:scale-110 transition-transform">
-              <Briefcase className="w-4 h-4 text-blue-600" />
+            <div className="p-2 bg-[#FFF0ED] rounded-lg group-hover:scale-110 transition-transform">
+              <Briefcase className="w-4 h-4 text-[#E15A3E]" />
             </div>
           </div>
           <p className="text-2xl font-bold text-slate-900">
@@ -184,7 +184,7 @@ export default function PortalDashboard() {
           </div>
           <Link
             href="/portal/invoices"
-            className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-medium text-[#E15A3E] hover:text-[#C54A30] transition-colors"
           >
             Lihat Semua
             <ArrowRight className="w-4 h-4" />
@@ -244,7 +244,7 @@ export default function PortalDashboard() {
                   <button
                     onClick={() => handlePay(inv)}
                     disabled={payingId === inv.id}
-                    className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm shadow-blue-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#E15A3E] hover:bg-[#C14A2F] text-white text-sm font-semibold rounded-xl transition-all shadow-sm shadow-[#E15A3E]/30 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {payingId === inv.id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -262,3 +262,4 @@ export default function PortalDashboard() {
     </div>
   );
 }
+

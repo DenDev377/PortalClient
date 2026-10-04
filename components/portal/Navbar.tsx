@@ -18,11 +18,11 @@ export default function Navbar({ user }: { user: any }) {
           <div className="flex items-center gap-6 sm:gap-10">
             {/* Logo */}
             <div className="flex items-center gap-2 select-none">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md border border-blue-800/20">
+              <div className="w-9 h-9 bg-[#E15A3E] rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md border border-[#C54A30]/20">
                 P
               </div>
               <span className="font-extrabold text-xl hidden sm:block tracking-tight text-slate-800">
-                Portal<span className="text-blue-600 font-semibold">Klien</span>
+                Portal<span className="text-[#E15A3E] font-semibold">Klien</span>
               </span>
             </div>
             
@@ -32,8 +32,8 @@ export default function Navbar({ user }: { user: any }) {
                 href="/portal/dashboard"
                 className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                   pathname === '/portal/dashboard' 
-                    ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100/50' 
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-[#E15A3E] text-white shadow-md shadow-[#E15A3E]/20' 
+                    : 'text-slate-500 hover:bg-[#FFF0ED] hover:text-[#E15A3E]'
                 }`}
               >
                 Dashboard
@@ -42,8 +42,8 @@ export default function Navbar({ user }: { user: any }) {
                 href="/portal/invoices"
                 className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                   pathname.startsWith('/portal/invoices') 
-                    ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100/50' 
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-[#E15A3E] text-white shadow-md shadow-[#E15A3E]/20' 
+                    : 'text-slate-500 hover:bg-[#FFF0ED] hover:text-[#E15A3E]'
                 }`}
               >
                 <Receipt className="w-4 h-4" />
@@ -77,3 +77,4 @@ export default function Navbar({ user }: { user: any }) {
     </header>
   );
 }
+

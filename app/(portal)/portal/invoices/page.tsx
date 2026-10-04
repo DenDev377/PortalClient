@@ -138,13 +138,13 @@ export default function PortalInvoices() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari nomor invoice..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E15A3E]/40 focus:border-[#E15A3E] transition-all"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="py-2.5 px-4 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all cursor-pointer"
+          className="py-2.5 px-4 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E15A3E]/40 focus:border-[#E15A3E] transition-all cursor-pointer"
         >
           <option value="">Semua Status</option>
           <option value="PENDING">Menunggu</option>
@@ -219,7 +219,7 @@ export default function PortalInvoices() {
                       <button
                         onClick={() => handlePay(inv)}
                         disabled={payingId === inv.id}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-[#E15A3E] hover:bg-[#C14A2F] text-white text-xs font-semibold rounded-xl transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
                       >
                         {payingId === inv.id ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -307,3 +307,4 @@ export default function PortalInvoices() {
     </div>
   );
 }
+

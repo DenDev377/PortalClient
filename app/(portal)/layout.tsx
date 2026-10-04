@@ -25,7 +25,7 @@ export default async function PortalLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 text-slate-900 flex flex-col font-sans selection:bg-blue-100">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0A2540] flex flex-col font-sans selection:bg-[#FFF0ED]">
       {/* Top Navbar Component */}
       <Navbar user={session.user} />
       
@@ -43,3 +43,4 @@ export default async function PortalLayout({
     </div>
   );
 }
+

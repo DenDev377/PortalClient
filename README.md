@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Client Portal & Invoice Management SaaS
 
-## Getting Started
+Sistem Manajemen Invoice tingkat *Enterprise* (*B2B SaaS*) dengan integrasi penuh **Midtrans Payment Gateway** dan pengamanan data isolasi bertingkat (Multi-Tenant). Proyek ini memisahkan secara ketat *dashboard* operasional agensi dari Portal eksekutif milik klien pelanggan.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Fitur Utama
+
+### 🛠️ Area Admin / Command Center
+- **Agregat Dashboard Real-time:** Memantau metrik total pendapatan, invoice kadaluarsa, dan rekap sisa penagihan (*unbilled worklogs*).
+- **Manajemen Klien & Proyek:** Membuat klien baru, menautkan Akun Klien (VVIP Portal), dan mengendalikan iterasi proyek harian.
+- **Time Tracker / Worklogs:** Mencatat lembar waktu jam kerja tim pada setiap tugas proyek untuk nantinya ditagihkan ke klien.
+- **Invoice Generator:** Fitur sekali klik (`One-Click Generation`) yang mengubah jam kerja yang belum dibayar menjadi Tagihan Pembayaran formal (Invoice).
+- **Smart Settings:** Tampilan pengaturan identitas penagihan, pajak (Tax Rate default), mata uang, dan fitur pengingat klien.
+
+### 💼 Portal Klien Eksekutif VVIP
+- **Tembok Isolasi Aman:** Klien tidak dapat melihat data perusahaan/klien lain di basis data berkat penanaman `clientId` lapis ganda di `Middleware` Next.js & kueri *Prisma*.
+- **Desain Khusus (Coral):** Dipercantik seluruhnya menggunakan UI Minimalist elegan dengan gaya warna korporat yang responsif.
+- **Pembayaran Sekali Sentuh:** Tagihan dapat diselesaikan detik itu juga di portal berkat fitur Pop-up **Midtrans Snap Button**.
+
+### 🤖 Sistem Otomasi di Balik Layar
+- Perlindungan integritas transaksi (menghindari duplikasi pembuatan *Snap Token* ganda).
+- **Silent Webhook Server-to-Server:** Ketika klien selesai mentransfer dari *M-Banking* di dunia nyata, Midtrans akan memukul endpoint Webhook yang kemudian merubah status Tagihan di Database MySQL Anda menjadi Valid (`PAID`), semuanya terjadi sekejap mata & sepenuhnya hands-free!
+
+---
+
+## 🛠️ Stack Teknologi
+
+- **Frontend:** Next.js 15 (App Router), Server Components, Tailwind CSS, Lucide Icons.
+- **API & Logic:** Next.js Route Handlers (`app/api/*`) & Server Actions.
+- **Autentikasi:** NextAuth.js (Berbasis Role: `ADMIN`, `TEAM`, `CLIENT`), *BcryptJS*.
+- **Database ORM:** Prisma Client v7+. 
+- **Database Engine:** MySQL Database.
+- **Payment Gateway:** Midtrans (Snap & Core API).
+
+---
+
+## ⚙️ Persyaratan Lingkungan (Prerequisites)
+
+Sistem ini membutuhkan parameter di bawah untuk beroperasi. Atur di file tersembunyi `/.env`.
+
+```env
+# URL Koneksi Ke MySQL Server (Isi sesuai local / cloud env Anda)
+DATABASE_URL="mysql://username:password@localhost:3306/client_portal_db"
+
+# Otentikasi Sesi NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="RANDOM_SECRET_STRING_YANG_SULIT_DITEBAK"
+
+# Sandi Server Rahasia Midtrans 
+MIDTRANS_SERVER_KEY="SB-Mid-server-xxxxxxxxxxxxxx"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Cara Menjalankan Sistem Lokal
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Unduh Depedensi Paket:**
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. **Sinkronisasi Otot Database Prisma:**
+   *Penting:* Jika Anda belum punya tabel, langkah ini akan mendirikan fondasinya di MySQL.
+   ```bash
+   npx prisma db push
+   npx prisma generate
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Nyalakan Server Pengembangan:**
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Buka Browser Utama dan ketikkan alamat:
+   - Akses: `http://localhost:3000`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔄 Contoh Alur Pengujian Bisnis (Sandbox)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Untuk memvalidasi bahwa seluruh pergerakan bisnis *(Business Flow)* beroperasi matang, Anda bisa mengikuti jalan cerita fiktif berikut:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Buat **1 entitas Klien** di halaman Admin. 
+2. Daftarkan kredensial masuk klien tersebut dan ingat kata sandinya.
+3. Buat **1 Proyek** lalu catatkan beberapa buah ***Worklogs* (Jam Kerja)** ke dalam proyek tersebut.
+4. Buka halaman _Invoice_ pada Admin, dan hasilkan tagihan berdasar kumpulan **Worklogs** yang belum digaji.
+5. Anda lalu bisa Logout / Keluar.
+6. Coba masuk (*Login*) kembali, **NAMUN**, masuklah bersandarkan email *(kredensial klien)* dari Langkah 2!
+7. Anda akan dilemparkan menuju **Portal Klien**. Saksikan betapa tagihan yang tadi Anda buat langsung tercetak di depan layar klien untuk mereka lunasi menggunakan rekening Bank virtual (Midtrans Sandbox / Simulator Webhooks). 
+
+---
+
+### Dikembangkan Oleh
+**Reptara Agency** © 2026. Hak Cipta Dilindungi.  
+*Sistem Arsitektur dibangun bekerjasama dengan kecerdasan simulasi AntiGravity Code Agent.*
