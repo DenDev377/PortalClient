@@ -233,7 +233,28 @@ const ClientPage = () => {
             clients={tableData}
             onViewWorkspace={handleViewWorkspace}
             onEditClient={handleEditClient}
-            onSendPortalLink={(id) => console.log("Send portal link:", id)}
+            onSendPortalLink={async (id) => {
+              try {
+                // Cari invoice PENDING/UNPAID milik klien ini
+                const res = await fetch(`/api/invoices?clientId=${id}&status=PENDING&limit=1`);
+                const json = await res.json();
+                const firstInvoice = json.data?.[0];
+                if (!firstInvoice) {
+                  alert("Klien ini tidak memiliki tagihan yang belum dibayar.");
+                  return;
+                }
+                const payRes = await fetch(`/api/invoices/${firstInvoice.id}/payment`);
+                const payData = await payRes.json();
+                if (payRes.ok && payData.redirect_url) {
+                  await navigator.clipboard.writeText(payData.redirect_url);
+                  alert(`Link pembayaran berhasil disalin ke clipboard!\n\n${payData.redirect_url}`);
+                } else {
+                  alert(payData.message || "Gagal membuat link pembayaran");
+                }
+              } catch {
+                alert("Terjadi kesalahan jaringan");
+              }
+            }}
             onDeleteClient={handleDeleteClient}
           />
         )}

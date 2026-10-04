@@ -35,10 +35,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen flex bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#E15A3E]/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-br from-[#E15A3E]/20 to-transparent pointer-events-none" />
         <div className="relative z-10">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-[#E15A3E] rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">

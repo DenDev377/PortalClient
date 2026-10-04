@@ -3,18 +3,15 @@ import { FileText, Clock, UserPlus } from "lucide-react";
 
 export default function QuickActionsWidget() {
   const handleNewInvoice = () => {
-    console.log("Buka Modal Invoice Builder");
-    // TODO: Trigger modal
+    window.location.href = "/invoices";
   };
 
   const handleLogWorklog = () => {
-    console.log("Buka Modal Time Tracker");
-    // TODO: Trigger modal
+    window.location.href = "/worklogs";
   };
 
   const handleAddClient = () => {
-    console.log("Buka Form Klien Baru");
-    // TODO: Trigger modal
+    window.location.href = "/clients";
   };
 
   const actions = [
